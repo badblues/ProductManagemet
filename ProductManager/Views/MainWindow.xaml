@@ -1,0 +1,57 @@
+﻿<Window x:Class="ProductManager.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProductManager"
+        xmlns:models="clr-namespace:Domain.Models;assembly=Domain"
+        mc:Ignorable="d"
+        Title="ProductManager" Height="720" Width="1280" ResizeMode="NoResize">
+    
+    <Window.Resources>
+        <HierarchicalDataTemplate DataType="{x:Type models:Link}" ItemsSource="{Binding Product.ProductsBelow}">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding Product.Name}" Margin="5"/>
+                <Label Content="{Binding Product.Price}" Margin="5"/>
+                <Label Content="{Binding Count}" Margin="5"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Grid.Row="0"
+            HorizontalAlignment="Left">
+            <Label Content="Add product:"/>
+            <Label Content="Name:"/>
+            <TextBlock
+                Text="{Binding EnteredName, Mode=TwoWay}"
+                Width="200"
+                Background="AliceBlue"/>
+            <Button
+                Content="Add"
+                Command="{Binding AddProductCommand}"/>
+        </StackPanel>
+
+        <ItemsControl
+            Grid.Row="1"
+            ItemsSource="{Binding Products}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Label Content="{Binding Name}"/>
+                        <Label Content="{Binding Price}"/>
+                        <TreeView ItemsSource="{Binding ProductsBelow}" />
+                    </DockPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Window>
+
+    

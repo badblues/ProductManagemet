@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
-public class DbProductRepository : IRepository<Product>
+public class DbProductRepository : IProductRepository
 {
 
     private ApplicationContext _context;

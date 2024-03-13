@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp\WpfApp.csproj", "{A1B0BEEE-AD6A-4E80-8CF3-E3DE05090E10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager", "ProductManager\ProductManager.csproj", "{A1B0BEEE-AD6A-4E80-8CF3-E3DE05090E10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{0D1FB058-1C80-4A75-89DE-65F76E30B354}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{0D1FB058-1C80-4A75-89DE-65F76E30B354}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{16D4FE9C-28D9-48A0-BD65-0315FB62F5D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{16D4FE9C-28D9-48A0-BD65-0315FB62F5D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
