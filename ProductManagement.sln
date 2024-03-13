@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp\WpfApp.csproj", "{A1B0BEEE-AD6A-4E80-8CF3-E3DE05090E10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{0D1FB058-1C80-4A75-89DE-65F76E30B354}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{16D4FE9C-28D9-48A0-BD65-0315FB62F5D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1B0BEEE-AD6A-4E80-8CF3-E3DE05090E10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B0BEEE-AD6A-4E80-8CF3-E3DE05090E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B0BEEE-AD6A-4E80-8CF3-E3DE05090E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B0BEEE-AD6A-4E80-8CF3-E3DE05090E10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D1FB058-1C80-4A75-89DE-65F76E30B354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D1FB058-1C80-4A75-89DE-65F76E30B354}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D1FB058-1C80-4A75-89DE-65F76E30B354}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D1FB058-1C80-4A75-89DE-65F76E30B354}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D4FE9C-28D9-48A0-BD65-0315FB62F5D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D4FE9C-28D9-48A0-BD65-0315FB62F5D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D4FE9C-28D9-48A0-BD65-0315FB62F5D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D4FE9C-28D9-48A0-BD65-0315FB62F5D7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {931ACE67-5A2D-436A-994F-0E649E6A2A52}
+	EndGlobalSection
+EndGlobal
