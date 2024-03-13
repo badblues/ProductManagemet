@@ -14,17 +14,11 @@ public class ApplicationContext : DbContext
         Database.EnsureCreated();
     }
 
-/*    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer(options => options.EnableRetryOnFailure());
-    }*/
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Link>().HasKey(link => new { link.UpProductId, link.ProductId });
-
 
         modelBuilder.Entity<Link>()
                 .HasOne(l => l.UpProduct)

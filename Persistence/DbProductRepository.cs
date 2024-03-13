@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
@@ -27,16 +28,16 @@ public class DbProductRepository : IRepository<Product>
 
     public IEnumerable<Product> GetAll()
     {
-        List<Product> products = _context.Products.ToList();
+        List<Product> products = _context.Products.Include(p => p.ProductsBelow).ToList();
         return products;
     }
 
     public void Update(Product product)
     {
-        var res = _context.Products.SingleOrDefault(p => p.Id == product.Id);
-        if (res != null)
+        Product oldProduct = _context.Products.SingleOrDefault(p => p.Id == product.Id);
+        if (oldProduct != null)
         {
-            _context.Entry(res).CurrentValues.SetValues(product);
+            _context.Entry(oldProduct).CurrentValues.SetValues(product);
             _context.SaveChanges();
         }
     }

@@ -1,8 +1,9 @@
 ﻿using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
-public class DbLinkRepository : IRepository<Link>
+public class DbLinkRepository : ILinkRepository
 {
 
     private ApplicationContext _context;
@@ -12,28 +13,47 @@ public class DbLinkRepository : IRepository<Link>
         _context = context;
     }
 
-    public void Create(Link obj)
+    public void Create(Link link)
     {
-        
+        _context.Links.Add(link);
+        _context.SaveChanges();
     }
 
-    public Link? Get(long id)
+    public Link? Get(long upProductId, long productId)
     {
-        throw new NotImplementedException();
+        Link? link = _context.Links
+            .SingleOrDefault(l => l.UpProductId == upProductId && l.ProductId == productId);
+        return link;
     }
 
     public IEnumerable<Link> GetAll()
     {
-        throw new NotImplementedException();
+        List<Link> links = _context.Links
+            .Include(l => l.Product)
+            .Include(l => l.UpProduct)
+            .ToList();
+        return links;
     }
 
-    public void Update(Link obj)
+    public void Update(Link link)
     {
-        throw new NotImplementedException();
+        Link? oldLink = _context.Links
+            .SingleOrDefault(l => l.UpProductId == link.UpProductId && l.ProductId == link.ProductId);
+        if (oldLink != null)
+        {
+            _context.Entry(oldLink).CurrentValues.SetValues(link);
+            _context.SaveChanges();
+        }
     }
 
-    public void Delete(Guid id)
+    public void Delete(long upProductId, long productId)
     {
-        throw new NotImplementedException();
+        Link? link = _context.Links
+            .SingleOrDefault(l => l.UpProductId == upProductId && l.ProductId == productId);
+        if (link != null)
+        {
+            _context.Remove(link);
+            _context.SaveChanges();
+        }
     }
 }
