@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 
 namespace ProductManager.Core;
+
 public class RelayCommand : ICommand
 {
     public event EventHandler? CanExecuteChanged;
@@ -16,14 +17,11 @@ public class RelayCommand : ICommand
 
     public bool CanExecute(object? parameter)
     {
-        if (parameter != null)
-            return _canExecute(parameter);
-        return false;
+        return _canExecute(parameter);
     }
 
-    public void Execute(object? parameter)
+    public void Execute (object? parameter)
     {
-        if (parameter != null)
-            _execute(parameter);
+        _execute(parameter);
     }
 }

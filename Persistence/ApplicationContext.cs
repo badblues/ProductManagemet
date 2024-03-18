@@ -18,19 +18,32 @@ public class ApplicationContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Link>().HasKey(link => new { link.UpProductId, link.ProductId });
+        modelBuilder.Entity<Product>()
+            .HasMany(p => p.ProductsBelow)
+            .WithOne()
+            .HasForeignKey(l => l.UpProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Product>()
+            .HasMany(p => p.UpProducts)
+            .WithOne()
+            .HasForeignKey(l => l.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Link>()
+            .HasKey(link => new { link.UpProductId, link.ProductId });
 
         modelBuilder.Entity<Link>()
                 .HasOne(l => l.UpProduct)
                 .WithMany(p => p.ProductsBelow)
                 .HasForeignKey(l => l.UpProductId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Link>()
-                    .HasOne(l => l.Product)
-                    .WithMany()
-                    .HasForeignKey(l => l.ProductId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                .HasOne(l => l.Product)
+                .WithMany(p => p.UpProducts)
+                .HasForeignKey(l => l.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
         modelBuilder.Entity<Product>().HasData(

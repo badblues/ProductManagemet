@@ -15,7 +15,8 @@ public class Product
 
     [Required]
     public float Price { get; set; }
-
-    [ForeignKey("UpProduct")]
+ 
     public ICollection<Link> ProductsBelow { get; set; } = new List<Link>();
+
+    public ICollection<Link> UpProducts { get; set; } = new List<Link>();
 }

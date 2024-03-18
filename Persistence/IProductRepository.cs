@@ -8,5 +8,5 @@ public interface IProductRepository
     Product? Get(long id);
     IEnumerable<Product> GetAll();
     void Update(Product product);
-    void Delete(Guid id);
+    void Delete(long id);
 }

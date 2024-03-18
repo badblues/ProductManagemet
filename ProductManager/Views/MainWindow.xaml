@@ -11,6 +11,10 @@
     <Window.Resources>
         <HierarchicalDataTemplate DataType="{x:Type models:Link}" ItemsSource="{Binding Product.ProductsBelow}">
             <StackPanel Orientation="Horizontal">
+                <Button
+                    Content="Select"
+                    Command="{Binding DataContext.SelectProductCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                    CommandParameter="{Binding Product}"/>
                 <Label Content="{Binding Product.Name}" Margin="5"/>
                 <Label Content="{Binding Product.Price}" Margin="5"/>
                 <Label Content="{Binding Count}" Margin="5"/>
@@ -26,32 +30,44 @@
 
         <StackPanel
             Grid.Row="0"
+            Grid.Column="0"
             HorizontalAlignment="Left">
             <Label Content="Add product:"/>
             <Label Content="Name:"/>
-            <TextBlock
+            <TextBox
                 Text="{Binding EnteredName, Mode=TwoWay}"
                 Width="200"
-                Background="AliceBlue"/>
+                Background="GreenYellow"/>
             <Button
                 Content="Add"
                 Command="{Binding AddProductCommand}"/>
         </StackPanel>
 
-        <ItemsControl
+        <ScrollViewer
             Grid.Row="1"
-            ItemsSource="{Binding Products}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel>
-                        <Label Content="{Binding Name}"/>
-                        <Label Content="{Binding Price}"/>
-                        <TreeView ItemsSource="{Binding ProductsBelow}" />
-                    </DockPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            Grid.Column="0"
+            CanContentScroll="True"
+            VerticalScrollBarVisibility="Auto"
+            Height="Auto">
+            <ItemsControl
+                ItemsSource="{Binding Products}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <Button
+                                Content="Select"
+                                Command="{Binding DataContext.SelectProductCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                CommandParameter="{Binding}"/>
+                            <Label Content="{Binding Name}"/>
+                            <Label Content="{Binding Price}"/>
+                            <TreeView ItemsSource="{Binding ProductsBelow}" />
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>
 
+    
     

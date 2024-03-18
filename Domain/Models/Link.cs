@@ -9,13 +9,11 @@ public class Link
     [Key]
     [Column(Order = 1)]
     [Required]
-    [ForeignKey("UpProduct")]
     public long UpProductId { get; set; }
 
     [Key]
     [Column(Order = 2)]
     [Required]
-    [ForeignKey("Product")]
     public long ProductId { get; set; }
 
     [Required]

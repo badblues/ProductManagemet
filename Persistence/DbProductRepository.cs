@@ -34,7 +34,7 @@ public class DbProductRepository : IProductRepository
 
     public void Update(Product product)
     {
-        Product oldProduct = _context.Products.SingleOrDefault(p => p.Id == product.Id);
+        Product? oldProduct = _context.Products.SingleOrDefault(p => p.Id == product.Id);
         if (oldProduct != null)
         {
             _context.Entry(oldProduct).CurrentValues.SetValues(product);
@@ -42,7 +42,7 @@ public class DbProductRepository : IProductRepository
         }
     }
 
-    public void Delete(Guid id)
+    public void Delete(long id)
     {
         Product? product = _context.Products.Find(id);
         if (product != null)

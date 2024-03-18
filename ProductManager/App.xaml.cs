@@ -1,8 +1,10 @@
 ﻿using System.Windows;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
+using ProductManager.Factories;
 using ProductManager.ViewModels;
 using ProductManager.Views;
 
@@ -16,16 +18,17 @@ public partial class App : Application
     public App()
     {
 
-        string connectionString = "Server = BADBLUESPC\\TESTSERVER; Database=ProductManagementDb; User Id=sa; Password=root";
+        string connectionString = "Data Source=./Product_management.db";
 
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddSingleton<MainWindow>();
                 services.AddSingleton<MainViewModel>();
+                services.AddTransient<IProductViewModelFactory, ProductViewModelFactory>();
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                    options.UseSqlServer(connectionString);
+                    options.UseSqlite(connectionString);
                 });
 
                 services.AddTransient<IProductRepository, DbProductRepository>();
