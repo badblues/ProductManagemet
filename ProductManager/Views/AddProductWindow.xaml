@@ -1,0 +1,28 @@
+﻿<Window x:Class="ProductManager.Views.AddProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProductManager.Views"
+        mc:Ignorable="d"
+        Title="AddProductWindow" Height="200" Width="400">
+    <StackPanel
+        HorizontalAlignment="Center">
+        <Label
+            HorizontalAlignment="Center"
+            Content="ADD PRODUCT"/>
+        <Label Content="Name:"/>
+        <TextBox
+            Text="{Binding EnteredName, Mode=TwoWay}"
+            Width="200"
+            Background="DarkGray"/>
+        <Label Content="Price:"/>
+        <TextBox
+            Text="{Binding EnteredPrice, Mode=TwoWay}"
+            Width="200"
+            Background="DarkGray"/> 
+        <Button
+            Content="Add"
+            Command="{Binding AddProductCommand}"/>
+    </StackPanel>
+</Window>

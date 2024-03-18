@@ -3,7 +3,7 @@ using ProductManager.ViewModels;
 
 namespace ProductManager.Factories;
 
-public interface IProductViewModelFactory
+public interface IViewModelFactory
 {
     ProductViewModel CreateProductViewModel(Product product);
 }

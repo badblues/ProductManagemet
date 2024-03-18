@@ -1,5 +1,7 @@
 ﻿using System.Security.Policy;
 using System.Windows.Input;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Domain.Models;
 using Persistence;
 using ProductManager.Core;
@@ -10,8 +12,11 @@ namespace ProductManager.ViewModels;
 
 public class MainViewModel : ViewModel
 {
-    public ICommand AddProductCommand { get; set; }
-    public ICommand SelectProductCommand { get; set; }
+    public ICommand OpenAddProductWindowCommand {  get; set; }
+    public ICommand SelectProductCommand { get; init; }
+    public ICommand RemoveLinkCommand { get; init; }
+    public ICommand EditCountCommand { get; init; }
+    public ICommand ExportToExcelCommand { get; init; }
 
     public IEnumerable<Product> Products
     {
@@ -33,39 +38,44 @@ public class MainViewModel : ViewModel
         }
     }
 
-    public string EnteredName { get; set; }
-    public int EnteredPrice { get; set; }
+    public string EnteredCount { get; set; } = "";
 
     private readonly IProductRepository _productRepository;
     private readonly ILinkRepository _linkRepository;
-    private readonly IProductViewModelFactory _productVMFactory;
+    private readonly IViewModelFactory _productVMFactory;
+    private readonly AddProductViewModel _addProductViewModel;
+    private readonly AddProductWindow _addProductWindow;
 
     private IEnumerable<Product> _products;
     private IEnumerable<Link> _links;
 
-    public MainViewModel(ILinkRepository linkRepository, IProductRepository productRepository, IProductViewModelFactory productVMFactory)
+    public MainViewModel(
+        ILinkRepository linkRepository,
+        IProductRepository productRepository,
+        IViewModelFactory productVMFactory,
+        AddProductViewModel addProductViewModel,
+        AddProductWindow addProductWindow)
     {
         _productRepository = productRepository;
         _linkRepository = linkRepository;
         _productVMFactory = productVMFactory;
+        _addProductViewModel = addProductViewModel;
+        _addProductViewModel.AddProductEvent += (sender, args) =>
+        {
+            Products = _productRepository.GetAll();
+        };
+        _addProductWindow = addProductWindow;
 
         Products = _productRepository.GetAll();
         Links = _linkRepository.GetAll();
 
-        AddProductCommand = new RelayCommand(AddProduct, o => true);
         SelectProductCommand = new RelayCommand(SelectProduct, o => true);
-        OnPropertyChanged(nameof(AddProductCommand));
+        RemoveLinkCommand = new RelayCommand(RemoveLink, o => true);
+        OpenAddProductWindowCommand = new RelayCommand(OpenAddProductWindow, o => true);
+        ExportToExcelCommand = new RelayCommand(ExportToExcel, o => true);
     }
 
-    public void AddProduct(object? unused)
-    {
-        if (EnteredName?.Length > 0)
-        {
-            Product newProduct = new() { Name = EnteredName, Price = EnteredPrice };
-            _productRepository.Create(newProduct);
-            Products = _productRepository.GetAll();
-        }
-    }
+   
 
     public void SelectProduct(object? parameter)
     {
@@ -85,8 +95,50 @@ public class MainViewModel : ViewModel
         }
     }
 
-    private void ProductViewModel_EditProductEvent(object? sender, EventArgs e)
+    public void RemoveLink(object? parameter)
     {
-        throw new NotImplementedException();
+        if (parameter is Link link)
+        {
+            _linkRepository.Delete(link.UpProductId, link.ProductId);
+            Products = _productRepository.GetAll();
+        }
+    }
+
+    public void OpenAddProductWindow(object? unused)
+    {
+        _addProductWindow.Show();
+    }
+
+    public void ExportToExcel(object? parameter)
+    {
+        if (parameter is string filePath)
+        {
+            using (XLWorkbook workbook = new XLWorkbook())
+            {
+                IXLWorksheet worksheet = workbook.Worksheets.Add("Products");
+
+                worksheet.Cell(1, 1).Value = "Product";
+                worksheet.Cell(1, 2).Value = "Count";
+                worksheet.Cell(1, 3).Value = "Cost";
+                worksheet.Cell(1, 4).Value = "Price";
+                worksheet.Cell(1, 5).Value = "Total count";
+
+                int row = 2;
+
+                foreach (Product product in Products)
+                {
+                    worksheet.Cell(row, 1).Value = product.Name;
+                    worksheet.Cell(row, 2).Value = "NaN";
+                    worksheet.Cell(row, 3).Value = "NaN";
+                    worksheet.Cell(row, 4).Value = product.Price;
+                    worksheet.Cell(row, 5).Value = "NaN";
+                    row++;
+                }
+
+                workbook.SaveAs(filePath);
+            }
+
+
+         }
     }
 }

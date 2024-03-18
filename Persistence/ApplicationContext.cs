@@ -17,12 +17,17 @@ public class ApplicationContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        ConfigureRelationships(modelBuilder);
+        FillWithData(modelBuilder);
+    }
 
+    private void ConfigureRelationships(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<Product>()
-            .HasMany(p => p.ProductsBelow)
-            .WithOne()
-            .HasForeignKey(l => l.UpProductId)
-            .OnDelete(DeleteBehavior.Cascade);
+           .HasMany(p => p.ProductsBelow)
+           .WithOne()
+           .HasForeignKey(l => l.UpProductId)
+           .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Product>()
             .HasMany(p => p.UpProducts)
@@ -34,18 +39,20 @@ public class ApplicationContext : DbContext
             .HasKey(link => new { link.UpProductId, link.ProductId });
 
         modelBuilder.Entity<Link>()
-                .HasOne(l => l.UpProduct)
-                .WithMany(p => p.ProductsBelow)
-                .HasForeignKey(l => l.UpProductId)
-                .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(l => l.UpProduct)
+            .WithMany(p => p.ProductsBelow)
+            .HasForeignKey(l => l.UpProductId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Link>()
-                .HasOne(l => l.Product)
-                .WithMany(p => p.UpProducts)
-                .HasForeignKey(l => l.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(l => l.Product)
+            .WithMany(p => p.UpProducts)
+            .HasForeignKey(l => l.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 
-
+    private void FillWithData(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<Product>().HasData(
             new Product { Id = 1, Name = "Product 1", Price = 800f },
             new Product { Id = 2, Name = "Product 2", Price = 100f },
@@ -58,7 +65,7 @@ public class ApplicationContext : DbContext
         );
 
         modelBuilder.Entity<Link>().HasData(
-            new Link { UpProductId= 1, ProductId = 2, Count = 10 },
+            new Link { UpProductId = 1, ProductId = 2, Count = 10 },
             new Link { UpProductId = 1, ProductId = 3, Count = 2 },
             new Link { UpProductId = 1, ProductId = 4, Count = 1 },
             new Link { UpProductId = 3, ProductId = 5, Count = 2 },

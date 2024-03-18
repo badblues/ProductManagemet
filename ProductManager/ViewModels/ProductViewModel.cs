@@ -12,11 +12,10 @@ public class ProductViewModel : ViewModel
 
     public event EventHandler EditProductEvent;
 
-
-
     public ICommand DeleteCommand { get; set; }
     public ICommand EditCommand { get; set; }
     public ICommand AddUpProductCommand { get; set; }
+    public ICommand EditLinkCommand { get; set; }
 
     public Product CurrentProduct
     {
@@ -60,6 +59,16 @@ public class ProductViewModel : ViewModel
         }
     }
 
+    public string EnteredCount
+    {
+        get => _enteredCount;
+        set
+        {
+            _enteredCount = value;
+            OnPropertyChanged(nameof(EnteredCount));
+        }
+    }
+
     private Product _currentProduct;
     private readonly IProductRepository _productRepository;
     private readonly ILinkRepository _linkRepository;
@@ -68,6 +77,7 @@ public class ProductViewModel : ViewModel
 
     private string _enteredName;
     private string _enteredPrice;
+    private string _enteredCount;
 
     public ProductViewModel(Product product, IProductRepository productRepository, ILinkRepository linkRepository)
     {
@@ -83,6 +93,7 @@ public class ProductViewModel : ViewModel
         DeleteCommand = new RelayCommand(DeleteProduct, o => true);
         EditCommand = new RelayCommand(EditProduct, o => true);
         AddUpProductCommand = new RelayCommand(AddUpProduct, o => true);
+        EditLinkCommand = new RelayCommand(EditLink, o => true);
     }
 
     public void EditProduct(object? unused)
@@ -105,15 +116,26 @@ public class ProductViewModel : ViewModel
 
     public void AddUpProduct(object? unused)
     {
-        Link link = new Link
-        {
-            ProductId = _currentProduct.Id,
-            UpProductId = SelectedUpProduct.Id
-        };
-        _linkRepository.Create(link);
-        EditProductEvent?.Invoke(this, EventArgs.Empty);
-        MessageBox.Show("UpProduct added", "Success", MessageBoxButton.OK);
+        if (_currentProduct != null)
+        { 
+            Link link = new Link
+            {
+                ProductId = _currentProduct.Id,
+                UpProductId = SelectedUpProduct.Id,
+                Count = int.Parse(EnteredCount)
+            };
+            _linkRepository.Create(link);
+            EditProductEvent?.Invoke(this, EventArgs.Empty);
+            MessageBox.Show("UpProduct added", "Success", MessageBoxButton.OK);
+        }
     }
 
+    public void EditLink(object? parameter)
+    {
+        if (parameter is Link link)
+        {
+            _linkRepository.Update(link);
+        } 
+    }
 
 }

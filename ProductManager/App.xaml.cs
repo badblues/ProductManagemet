@@ -25,7 +25,9 @@ public partial class App : Application
             {
                 services.AddSingleton<MainWindow>();
                 services.AddSingleton<MainViewModel>();
-                services.AddTransient<IProductViewModelFactory, ProductViewModelFactory>();
+                services.AddSingleton<AddProductWindow>();
+                services.AddSingleton<AddProductViewModel>();
+                services.AddTransient<IViewModelFactory, ViewModelFactory>();
                 services.AddDbContext<ApplicationContext>(options =>
                 {
                     options.UseSqlite(connectionString);

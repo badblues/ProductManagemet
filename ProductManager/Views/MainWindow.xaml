@@ -7,40 +7,44 @@
         xmlns:models="clr-namespace:Domain.Models;assembly=Domain"
         mc:Ignorable="d"
         Title="ProductManager" Height="720" Width="1280" ResizeMode="NoResize">
-    
+
     <Window.Resources>
         <HierarchicalDataTemplate DataType="{x:Type models:Link}" ItemsSource="{Binding Product.ProductsBelow}">
-            <StackPanel Orientation="Horizontal">
-                <Button
-                    Content="Select"
-                    Command="{Binding DataContext.SelectProductCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                    CommandParameter="{Binding Product}"/>
-                <Label Content="{Binding Product.Name}" Margin="5"/>
-                <Label Content="{Binding Product.Price}" Margin="5"/>
-                <Label Content="{Binding Count}" Margin="5"/>
+            <StackPanel>
+                <DockPanel>
+                    <Label Content="{Binding Product.Name}" Margin="5"/>
+                    <Label Content="{Binding Product.Price}" Margin="5"/>
+                    <Label Content="{Binding Count}" Margin="5"/>
+                </DockPanel>
+                <DockPanel>
+                    <Button
+                        Content="Select"
+                        Command="{Binding DataContext.SelectProductCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                        CommandParameter="{Binding Product}"/>
+                    <Button
+                        Content="Remove from upproduct"
+                        Command="{Binding DataContext.RemoveLinkCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                        CommandParameter="{Binding}"/>
+                    <Button 
+                        Content="Edit coutn"
+                        Command="{Binding DataContext.EditCountCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                        CommandParameter="{Binding}"/>
+                </DockPanel>
+
             </StackPanel>
         </HierarchicalDataTemplate>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="31*" />
+            <RowDefinition Height="321*" />
         </Grid.RowDefinitions>
 
-        <StackPanel
-            Grid.Row="0"
-            Grid.Column="0"
-            HorizontalAlignment="Left">
-            <Label Content="Add product:"/>
-            <Label Content="Name:"/>
-            <TextBox
-                Text="{Binding EnteredName, Mode=TwoWay}"
-                Width="200"
-                Background="GreenYellow"/>
+        <StackPanel>
             <Button
-                Content="Add"
-                Command="{Binding AddProductCommand}"/>
+                Content="ADD PRODUCT"
+                Command="{Binding OpenAddProductWindowCommand}"/>
         </StackPanel>
 
         <ScrollViewer
@@ -48,7 +52,7 @@
             Grid.Column="0"
             CanContentScroll="True"
             VerticalScrollBarVisibility="Auto"
-            Height="Auto">
+            Height="Auto" Margin="0,141,0,0">
             <ItemsControl
                 ItemsSource="{Binding Products}">
                 <ItemsControl.ItemTemplate>
@@ -66,7 +70,17 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+        
+        <Menu>
+            <MenuItem
+                Header="_File">
+                <MenuItem
+                    Header="_Export"
+                    Click="ExportFile_Click"/>
+            </MenuItem>
+        </Menu>
     </Grid>
+
 </Window>
 
     

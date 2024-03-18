@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProductManager.Views"
         mc:Ignorable="d"
-        Title="ProductWindow" Height="200" Width="400" ResizeMode="NoResize">
+        Title="ProductWindow" Height="400" Width="600" ResizeMode="NoResize">
     <StackPanel>
         <Label Content="Name:"/>
         <TextBox Text="{Binding EnteredName, Mode=TwoWay}" />
@@ -26,8 +26,21 @@
                 DisplayMemberPath="Name"
                 SelectedItem="{Binding SelectedUpProduct, Mode=TwoWay}"/>
         </DockPanel>
+        <Label Content="Count:"/>
+        <TextBox Text="{Binding EnteredCount}"/>
         <Button
             Content="Add UpProduct"
             Command="{Binding AddUpProductCommand}"/>
+        <ItemsControl
+            ItemsSource="{Binding CurrentProduct.UpProducts}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Label Content="{Binding UpProduct.Name}" />
+                        <Label Content="{Binding Count}" />
+                    </DockPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </StackPanel>
 </Window>
