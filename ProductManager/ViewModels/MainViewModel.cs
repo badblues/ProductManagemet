@@ -6,6 +6,7 @@ using Domain.Models;
 using Persistence;
 using ProductManager.Core;
 using ProductManager.Factories;
+using ProductManager.Services;
 using ProductManager.Views;
 
 namespace ProductManager.ViewModels;
@@ -45,6 +46,7 @@ public class MainViewModel : ViewModel
     private readonly IViewModelFactory _productVMFactory;
     private readonly AddProductViewModel _addProductViewModel;
     private readonly AddProductWindow _addProductWindow;
+    private readonly ExcelService _excelService;
 
     private IEnumerable<Product> _products;
     private IEnumerable<Link> _links;
@@ -54,7 +56,8 @@ public class MainViewModel : ViewModel
         IProductRepository productRepository,
         IViewModelFactory productVMFactory,
         AddProductViewModel addProductViewModel,
-        AddProductWindow addProductWindow)
+        AddProductWindow addProductWindow,
+        ExcelService excelService)
     {
         _productRepository = productRepository;
         _linkRepository = linkRepository;
@@ -62,11 +65,12 @@ public class MainViewModel : ViewModel
         _addProductViewModel = addProductViewModel;
         _addProductViewModel.AddProductEvent += (sender, args) =>
         {
-            Products = _productRepository.GetAll();
+            LoadProducts();
         };
         _addProductWindow = addProductWindow;
+        _excelService = excelService;
 
-        Products = _productRepository.GetAll();
+        LoadProducts();
         Links = _linkRepository.GetAll();
 
         SelectProductCommand = new RelayCommand(SelectProduct, o => true);
@@ -84,11 +88,11 @@ public class MainViewModel : ViewModel
             ProductViewModel productViewModel = _productVMFactory.CreateProductViewModel(product);
             productViewModel.DeleteProductEvent += (sender, args) =>
             {
-                Products = _productRepository.GetAll();
+                LoadProducts();
             };
             productViewModel.EditProductEvent += (sender, args) =>
             {
-                Products = _productRepository.GetAll();
+                LoadProducts();
             };
             ProductWindow productWindow = new ProductWindow(productViewModel);
             productWindow.Show();
@@ -100,7 +104,7 @@ public class MainViewModel : ViewModel
         if (parameter is Link link)
         {
             _linkRepository.Delete(link.UpProductId, link.ProductId);
-            Products = _productRepository.GetAll();
+            LoadProducts();
         }
     }
 
@@ -113,32 +117,15 @@ public class MainViewModel : ViewModel
     {
         if (parameter is string filePath)
         {
-            using (XLWorkbook workbook = new XLWorkbook())
-            {
-                IXLWorksheet worksheet = workbook.Worksheets.Add("Products");
+            XLWorkbook workbook = _excelService.ExportProducts(Products);
+            workbook.SaveAs(filePath);
+        }
+    }
 
-                worksheet.Cell(1, 1).Value = "Product";
-                worksheet.Cell(1, 2).Value = "Count";
-                worksheet.Cell(1, 3).Value = "Cost";
-                worksheet.Cell(1, 4).Value = "Price";
-                worksheet.Cell(1, 5).Value = "Total count";
-
-                int row = 2;
-
-                foreach (Product product in Products)
-                {
-                    worksheet.Cell(row, 1).Value = product.Name;
-                    worksheet.Cell(row, 2).Value = "NaN";
-                    worksheet.Cell(row, 3).Value = "NaN";
-                    worksheet.Cell(row, 4).Value = product.Price;
-                    worksheet.Cell(row, 5).Value = "NaN";
-                    row++;
-                }
-
-                workbook.SaveAs(filePath);
-            }
-
-
-         }
+    private void LoadProducts()
+    {
+        Products = _productRepository.GetAll();
+        Products = Products.Where(product => product.UpProducts.Count == 0);
     }
 }
+

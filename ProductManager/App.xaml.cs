@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
 using ProductManager.Factories;
+using ProductManager.Services;
 using ProductManager.ViewModels;
 using ProductManager.Views;
 
@@ -35,6 +36,7 @@ public partial class App : Application
 
                 services.AddTransient<IProductRepository, DbProductRepository>();
                 services.AddTransient<ILinkRepository, DbLinkRepository>();
+                services.AddTransient<ExcelService>();
 
             }).Build();
     }
