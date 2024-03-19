@@ -1,6 +1,8 @@
-﻿using System.Windows;
-using Microsoft.Data.Sqlite;
+﻿using System.Configuration;
+using System.IO;
+using System.Windows;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
@@ -18,8 +20,16 @@ public partial class App : Application
 
     public App()
     {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("./appsettings.json", optional: false);
 
-        string connectionString = "Data Source=./Product_management.db";
+        IConfiguration configuration = builder.Build();
+
+        string? connectionString = configuration.GetConnectionString("SQLiteDatabase");
+
+        if (connectionString == null)
+            throw new ConfigurationErrorsException("Couldn't find DB configuration");
 
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices((hostContext, services) =>
