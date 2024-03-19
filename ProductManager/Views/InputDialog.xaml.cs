@@ -1,32 +1,31 @@
 ﻿using System.Windows;
 
-namespace ProductManager.Views
+namespace ProductManager.Views;
+
+public partial class InputDialog : Window
 {
-    public partial class InputDialog : Window
+    public int EnteredNumber { get; private set; }
+
+    public InputDialog()
     {
-        public int EnteredNumber { get; private set; }
+        InitializeComponent();
+    }
 
-        public InputDialog()
+    private void OkButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (int.TryParse(NumberTextBox.Text, out int number) && number >= 0)
         {
-            InitializeComponent();
+            EnteredNumber = number;
+            DialogResult = true;
         }
+        else
+        {
+            MessageBox.Show("Please enter a valid positive number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (int.TryParse(NumberTextBox.Text, out int number) && number >= 0)
-            {
-                EnteredNumber = number;
-                DialogResult = true;
-            }
-            else
-            {
-                MessageBox.Show("Please enter a valid positive number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-        }
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
     }
 }

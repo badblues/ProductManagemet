@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace ProductManager.Core;
+namespace ProductManager.Commands;
 
 public class RelayCommand : ICommand
 {
@@ -20,7 +20,7 @@ public class RelayCommand : ICommand
         return _canExecute(parameter);
     }
 
-    public void Execute (object? parameter)
+    public void Execute(object? parameter)
     {
         _execute(parameter);
     }

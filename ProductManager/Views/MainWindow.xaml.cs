@@ -16,9 +16,9 @@ public partial class MainWindow : Window
 
     private void ExportFile_Click(object sender, RoutedEventArgs e)
     {
-        InputDialog numberDialog = new InputDialog();
+        InputDialog numberDialog = new();
 
-        var dialog = new SaveFileDialog
+        SaveFileDialog dialog = new()
         {
             Filter = "Excel Files (*.xlsx)|*xlsx",
             DefaultExt = ".xlsx",
@@ -29,7 +29,7 @@ public partial class MainWindow : Window
         {
             if (dialog.ShowDialog() == true)
             {
-                var viewModel = DataContext as MainViewModel;
+                MainViewModel? viewModel = DataContext as MainViewModel;
                 ICommand exportCommand = viewModel.ExportToExcelCommand;
                 if (exportCommand.CanExecute(null))
                 {
@@ -37,8 +37,6 @@ public partial class MainWindow : Window
                 }
             }
         }
-
-
     }
 
     protected override void OnClosed(EventArgs e)

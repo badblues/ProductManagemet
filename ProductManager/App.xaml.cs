@@ -22,7 +22,7 @@ public partial class App : Application
 
     public App()
     {
-        var builder = new ConfigurationBuilder()
+        IConfigurationBuilder builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("./appsettings.json", optional: false);
 
@@ -31,7 +31,9 @@ public partial class App : Application
         string? connectionString = configuration.GetConnectionString("SQLiteDatabase");
 
         if (string.IsNullOrEmpty(connectionString))
+        {
             throw new ConfigurationErrorsException("Couldn't find DB configuration");
+        }
 
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices((hostContext, services) =>
@@ -56,7 +58,7 @@ public partial class App : Application
     {
         await AppHost!.StartAsync();
 
-        var startupForm = AppHost.Services.GetRequiredService<MainWindow>();
+        MainWindow startupForm = AppHost.Services.GetRequiredService<MainWindow>();
         startupForm.Show();
 
         base.OnStartup(e);

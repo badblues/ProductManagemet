@@ -19,7 +19,7 @@ public class Link
     [Required]
     public int Count { get; set; }
 
-    public virtual Product UpProduct { get; set; }
+    public virtual Product? UpProduct { get; set; }
 
-    public virtual Product Product { get; set; }
+    public virtual Product? Product { get; set; }
 }

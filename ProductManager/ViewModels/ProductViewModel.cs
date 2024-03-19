@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using Domain.Models;
 using Persistence.Repositories.Interfaces;
-using ProductManager.Core;
+using ProductManager.Commands;
 using ProductManager.Views;
 
 namespace ProductManager.ViewModels;
@@ -46,7 +46,7 @@ public class ProductViewModel : ViewModel
         get => _enteredPrice;
         set
         {
-            if (int.TryParse(value, NumberStyles.Float, null, out int unused) || value == "")
+            if (float.TryParse(value, NumberStyles.Float, null, out _) || value == "")
             {
                 _enteredPrice = value;
                 OnPropertyChanged(nameof(_enteredName));
@@ -79,7 +79,7 @@ public class ProductViewModel : ViewModel
         get => _enteredCount;
         set
         {
-            if (int.TryParse(value, NumberStyles.Integer, null, out int unused) || value == "")
+            if (int.TryParse(value, NumberStyles.Integer, null, out _) || value == "")
             {
                 _enteredCount = value;
                 OnPropertyChanged(nameof(EnteredCount));
@@ -92,7 +92,7 @@ public class ProductViewModel : ViewModel
         get => _editCountText;
         set
         {
-            if (int.TryParse(value, NumberStyles.Integer, null, out int unused) || value == "")
+            if (int.TryParse(value, NumberStyles.Integer, null, out _) || value == "")
             {
                 _editCountText = value;
                 OnPropertyChanged(nameof(EditCountText));
@@ -113,8 +113,8 @@ public class ProductViewModel : ViewModel
     private string _editCountText = "";
 
     public ProductViewModel(
-        Product product, 
-        IProductRepository productRepository, 
+        Product product,
+        IProductRepository productRepository,
         ILinkRepository linkRepository)
     {
         _currentProduct = product;
@@ -158,7 +158,8 @@ public class ProductViewModel : ViewModel
                 _productRepository.Update(CurrentProduct);
                 EditProductEvent?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show("Saved", "Success", MessageBoxButton.OK);
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 MessageBox.Show("Error updating product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -191,10 +192,10 @@ public class ProductViewModel : ViewModel
             return;
         }
         if (int.TryParse(EnteredCount, NumberStyles.Integer, null, out int count))
-        { 
+        {
             try
             {
-                Link link = new Link
+                Link link = new()
                 {
                     ProductId = _currentProduct.Id,
                     UpProductId = SelectedUpProduct.Id,
@@ -208,7 +209,8 @@ public class ProductViewModel : ViewModel
             {
                 MessageBox.Show("Error creating link", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        } else
+        }
+        else
         {
             MessageBox.Show("Enter count", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -220,11 +222,13 @@ public class ProductViewModel : ViewModel
         {
             SelectedLink = link;
             EditCountText = link.Count.ToString();
-            EditCountWindow editCountWindow = new EditCountWindow(this);
+            EditCountWindow editCountWindow = new(this);
             editCountWindow.Show();
         }
         if (parameter == null)
+        {
             SelectedLink = null;
+        }
     }
 
     public void EditCount(object? unused)
@@ -250,5 +254,4 @@ public class ProductViewModel : ViewModel
             }
         }
     }
-
 }

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using Domain.Models;
 using Persistence.Repositories.Interfaces;
-using ProductManager.Core;
+using ProductManager.Commands;
 
 namespace ProductManager.ViewModels;
 
@@ -18,8 +18,8 @@ public class AddProductViewModel : ViewModel
         get => _enteredPrice;
         set
         {
-            if (float.TryParse(value, NumberStyles.Float, null, out float unused) || value == "")
-               _enteredPrice = value;
+            if (float.TryParse(value, NumberStyles.Float, null, out _) || value == "")
+                _enteredPrice = value;
         }
     }
 
@@ -50,11 +50,13 @@ public class AddProductViewModel : ViewModel
                 _productRepository.Create(newProduct);
                 AddProductEvent?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show("Created", "Success", MessageBoxButton.OK);
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 MessageBox.Show("Error creating product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        } else
+        }
+        else
         {
             MessageBox.Show("Invalid data", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }

@@ -1,5 +1,4 @@
-﻿
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Domain.Models;
 
 namespace ProductManager.Services;
@@ -8,7 +7,7 @@ public class ExcelService
 {
     public XLWorkbook ExportProducts(IEnumerable<Product> products, int maxLevel)
     {
-        XLWorkbook workbook = new XLWorkbook();
+        XLWorkbook workbook = new();
         IXLWorksheet worksheet = workbook.Worksheets.Add("Products");
 
         worksheet.Cell(1, 1).Value = "Product";
@@ -32,7 +31,7 @@ public class ExcelService
                 {
                     row = WriteProduct(worksheet, subProduct, row, 2, maxLevel);
                     totalCost += GetCost(subProduct);
-                    totalCount += GetTotalCount(subProduct) + subProduct.Count * 1;
+                    totalCount += GetTotalCount(subProduct) + subProduct.Count;
                 }
 
                 worksheet.Cell(myrow, 1).Value = product.Name;
@@ -42,7 +41,6 @@ public class ExcelService
                 worksheet.Cell(myrow, 5).Value = product.Price;
                 worksheet.Cell(myrow, 6).Value = totalCount;
             }
-            
         }
         return workbook;
     }
@@ -70,20 +68,27 @@ public class ExcelService
 
     private float GetCost(Link link)
     {
-        float totalCost = link.Product.Price * link.Count;
-        foreach (Link subProduct in link.Product.ProductsBelow)
+        if (link.Product != null)
         {
-            totalCost += GetCost(subProduct);
+            float totalCost = link.Product.Price * link.Count;
+            foreach (Link subProduct in link.Product.ProductsBelow)
+            {
+                totalCost += GetCost(subProduct);
+            }
+            return totalCost;
         }
-        return totalCost;
+        return 0;
     }
 
     private int GetTotalCount(Link link)
     {
         int totalCount = 0;
-        foreach (Link subProduct in link.Product.ProductsBelow)
+        if (link.Product != null)
         {
-            totalCount += GetTotalCount(subProduct) + subProduct.Count * link.Count;
+            foreach (Link subProduct in link.Product.ProductsBelow)
+            {
+                totalCount += GetTotalCount(subProduct) + (subProduct.Count * link.Count);
+            }
         }
         return totalCount;
     }

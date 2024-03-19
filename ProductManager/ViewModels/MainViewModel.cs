@@ -4,6 +4,7 @@ using System.Windows.Input;
 using ClosedXML.Excel;
 using Domain.Models;
 using Persistence.Repositories.Interfaces;
+using ProductManager.Commands;
 using ProductManager.Core;
 using ProductManager.Factories;
 using ProductManager.Services;
@@ -13,7 +14,7 @@ namespace ProductManager.ViewModels;
 
 public class MainViewModel : ViewModel
 {
-    public ICommand OpenAddProductWindowCommand {  get; set; }
+    public ICommand OpenAddProductWindowCommand { get; set; }
     public ICommand SelectProductCommand { get; init; }
     public ICommand RemoveLinkCommand { get; init; }
     public ICommand ExportToExcelCommand { get; init; }
@@ -58,8 +59,6 @@ public class MainViewModel : ViewModel
         ExportToExcelCommand = new RelayCommand(ExportToExcel, o => true);
     }
 
-   
-
     public void SelectProduct(object? parameter)
     {
         if (parameter is Product product)
@@ -67,7 +66,7 @@ public class MainViewModel : ViewModel
             ProductViewModel productViewModel = _productVMFactory.CreateProductViewModel(product);
             productViewModel.DeleteProductEvent += (sender, args) => LoadProducts();
             productViewModel.EditProductEvent += (sender, args) => LoadProducts();
-            ProductWindow productWindow = new ProductWindow(productViewModel);
+            ProductWindow productWindow = new(productViewModel);
             productWindow.Show();
         }
     }
@@ -80,7 +79,8 @@ public class MainViewModel : ViewModel
             {
                 _linkRepository.Delete(link.UpProductId, link.ProductId);
                 LoadProducts();
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 MessageBox.Show($"Error during removing link", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -89,7 +89,7 @@ public class MainViewModel : ViewModel
 
     public void OpenAddProductWindow(object? unused)
     {
-        AddProductWindow addProductWindow = new AddProductWindow(_addProductViewModel);
+        AddProductWindow addProductWindow = new(_addProductViewModel);
         addProductWindow.Show();
     }
 
@@ -101,7 +101,8 @@ public class MainViewModel : ViewModel
             {
                 XLWorkbook workbook = _excelService.ExportProducts(Products, args.MaxLevel);
                 workbook.SaveAs(args.FileName);
-            } catch (IOException ex)
+            }
+            catch (IOException ex)
             {
                 MessageBox.Show($"Error during file saving: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }

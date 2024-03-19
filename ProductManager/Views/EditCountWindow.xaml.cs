@@ -14,7 +14,7 @@ public partial class EditCountWindow : Window
 
     private void Window_Closing(object sender, CancelEventArgs e)
     {
-        var viewModel = DataContext as ProductViewModel;
+        ProductViewModel? viewModel = DataContext as ProductViewModel;
         viewModel?.SelectLinkCommand.Execute(null);
     }
 }

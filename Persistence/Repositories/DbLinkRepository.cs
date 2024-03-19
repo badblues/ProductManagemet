@@ -7,8 +7,8 @@ namespace Persistence.Repositories;
 public class DbLinkRepository : ILinkRepository
 {
 
-    private ApplicationContext _context;
-    private IProductRepository _productRepository;
+    private readonly ApplicationContext _context;
+    private readonly IProductRepository _productRepository;
 
     public DbLinkRepository(
         ApplicationContext context,
@@ -22,8 +22,10 @@ public class DbLinkRepository : ILinkRepository
     {
         Product? product = _productRepository.Get(link.ProductId);
         Product? upProduct = _productRepository.Get(link.UpProductId);
+
         if (FindCycle(product, upProduct))
             throw new ArgumentException("Products cannot form cycles");
+
         _context.Links.Add(link);
         _context.SaveChanges();
     }
@@ -70,6 +72,7 @@ public class DbLinkRepository : ILinkRepository
     {
         if (product == upProduct)
             return true;
+
         foreach (Link productBelow in product.ProductsBelow)
         {
             if (FindCycle(productBelow.Product, upProduct))

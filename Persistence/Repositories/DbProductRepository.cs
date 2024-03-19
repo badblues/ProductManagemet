@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Domain.Models;
+﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Repositories.Interfaces;
 
@@ -8,7 +7,7 @@ namespace Persistence.Repositories;
 public class DbProductRepository : IProductRepository
 {
 
-    private ApplicationContext _context;
+    private readonly ApplicationContext _context;
 
     public DbProductRepository(ApplicationContext context)
     {
