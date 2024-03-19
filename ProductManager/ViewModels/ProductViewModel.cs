@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Input;
 using Domain.Models;
 using Persistence;
@@ -15,7 +16,7 @@ public class ProductViewModel : ViewModel
     public ICommand DeleteCommand { get; set; }
     public ICommand EditCommand { get; set; }
     public ICommand AddUpProductCommand { get; set; }
-    public ICommand EditLinkCommand { get; set; }
+    public ICommand EditCountCommand { get; set; }
 
     public Product CurrentProduct
     {
@@ -28,16 +29,6 @@ public class ProductViewModel : ViewModel
     }
 
     public IEnumerable<Product> Products { get; set; }
-
-    public Product SelectedUpProduct
-    {
-        get => _selectedUpProduct;
-        set
-        {
-            _selectedUpProduct = value;
-            OnPropertyChanged(nameof(SelectedUpProduct));
-        }
-    }
 
     public string EnteredName
     {
@@ -54,8 +45,21 @@ public class ProductViewModel : ViewModel
         get => _enteredPrice;
         set
         {
-            _enteredPrice = value;
-            OnPropertyChanged(nameof(EnteredPrice));
+            if (int.TryParse(value, NumberStyles.Float, null, out int unused) || value == "")
+            {
+                _enteredPrice = value;
+                OnPropertyChanged(nameof(_enteredName));
+            }
+        }
+    }
+
+    public Product SelectedUpProduct
+    {
+        get => _selectedUpProduct;
+        set
+        {
+            _selectedUpProduct = value;
+            OnPropertyChanged(nameof(SelectedUpProduct));
         }
     }
 
@@ -64,8 +68,24 @@ public class ProductViewModel : ViewModel
         get => _enteredCount;
         set
         {
-            _enteredCount = value;
-            OnPropertyChanged(nameof(EnteredCount));
+            if (int.TryParse(value, NumberStyles.Integer, null, out int unused) || value == "")
+            {
+                _enteredCount = value;
+                OnPropertyChanged(nameof(EnteredCount));
+            }
+        }
+    }
+
+    public string EditCountText
+    {
+        get => _editCountText;
+        set
+        {
+            if (int.TryParse(value, NumberStyles.Integer, null, out int unused) || value == "")
+            {
+                _editCountText = value;
+                OnPropertyChanged(nameof(EditCountText));
+            }
         }
     }
 
@@ -78,8 +98,12 @@ public class ProductViewModel : ViewModel
     private string _enteredName;
     private string _enteredPrice;
     private string _enteredCount;
+    private string _editCountText;
 
-    public ProductViewModel(Product product, IProductRepository productRepository, ILinkRepository linkRepository)
+    public ProductViewModel(
+        Product product, 
+        IProductRepository productRepository, 
+        ILinkRepository linkRepository)
     {
         _currentProduct = product;
         _productRepository = productRepository;
@@ -93,18 +117,36 @@ public class ProductViewModel : ViewModel
         DeleteCommand = new RelayCommand(DeleteProduct, o => true);
         EditCommand = new RelayCommand(EditProduct, o => true);
         AddUpProductCommand = new RelayCommand(AddUpProduct, o => true);
-        EditLinkCommand = new RelayCommand(EditLink, o => true);
+        EditCountCommand = new RelayCommand(EditLink, o => true);
     }
 
-    public void EditProduct(object? unused)
+    public void EditProduct(object? parameter)
     {
-        Product updatedProduct = CurrentProduct;
-        updatedProduct.Name = EnteredName;
-        updatedProduct.Price = float.Parse(EnteredPrice);
-        _productRepository.Update(updatedProduct);
-        CurrentProduct = updatedProduct;
-        EditProductEvent?.Invoke(this, EventArgs.Empty);
-        MessageBox.Show("Saved", "Success", MessageBoxButton.OK);
+        bool productChanged = false;
+        if (EnteredName?.Length > 0 && EnteredName != CurrentProduct.Name)
+        {
+            CurrentProduct.Name = EnteredName;
+            productChanged = true;
+        }
+
+        if (EnteredPrice?.Length > 0
+            && float.TryParse(_enteredPrice, NumberStyles.Float, null, out float price)
+            && price != CurrentProduct.Price)
+        {
+            CurrentProduct.Price = price;
+            productChanged = true;
+        }
+
+        if (productChanged)
+        {
+            _productRepository.Update(CurrentProduct);
+            EditProductEvent?.Invoke(this, EventArgs.Empty);
+            MessageBox.Show("Saved", "Success", MessageBoxButton.OK);
+        }
+        else
+        {
+            MessageBox.Show("Nothing to update", "Error", MessageBoxButton.OK);
+        }
     }
 
     public void DeleteProduct(object? unused)
@@ -116,26 +158,27 @@ public class ProductViewModel : ViewModel
 
     public void AddUpProduct(object? unused)
     {
-        if (_currentProduct != null)
+        if (SelectedUpProduct == null)
+            MessageBox.Show("Select UpProduct", "Error", MessageBoxButton.OK);
+        if (EnteredCount?.Length > 0 && int.TryParse(EnteredCount, NumberStyles.Integer, null, out int count))
         { 
             Link link = new Link
             {
                 ProductId = _currentProduct.Id,
                 UpProductId = SelectedUpProduct.Id,
-                Count = int.Parse(EnteredCount)
+                Count = count
             };
             _linkRepository.Create(link);
             EditProductEvent?.Invoke(this, EventArgs.Empty);
             MessageBox.Show("UpProduct added", "Success", MessageBoxButton.OK);
+        } else
+        {
+            MessageBox.Show("Enter count", "Error", MessageBoxButton.OK);
         }
     }
 
-    public void EditLink(object? parameter)
+    public void EditLink(object? unused)
     {
-        if (parameter is Link link)
-        {
-            _linkRepository.Update(link);
-        } 
     }
 
 }

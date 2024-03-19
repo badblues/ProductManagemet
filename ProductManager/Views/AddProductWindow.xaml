@@ -13,12 +13,12 @@
             Content="ADD PRODUCT"/>
         <Label Content="Name:"/>
         <TextBox
-            Text="{Binding EnteredName, Mode=TwoWay}"
+            Text="{Binding EnteredName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Width="200"
             Background="DarkGray"/>
         <Label Content="Price:"/>
         <TextBox
-            Text="{Binding EnteredPrice, Mode=TwoWay}"
+            Text="{Binding EnteredPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Width="200"
             Background="DarkGray"/> 
         <Button

@@ -1,4 +1,6 @@
 ﻿
+using System.Globalization;
+using System.Windows;
 using System.Windows.Input;
 using Domain.Models;
 using Persistence;
@@ -11,11 +13,22 @@ public class AddProductViewModel : ViewModel
     public event EventHandler AddProductEvent;
 
     public string EnteredName { get; set; } = "";
-    public string EnteredPrice { get; set; } = "";
+
+    public string EnteredPrice
+    {
+        get => _enteredPrice;
+        set
+        {
+            if (float.TryParse(value, NumberStyles.Float, null, out float unused) || value == "")
+               _enteredPrice = value;
+        }
+    }
 
     public ICommand AddProductCommand { get; init; }
 
     private readonly IProductRepository _productRepository;
+
+    private string _enteredPrice = "";
 
     public AddProductViewModel(IProductRepository productRepository)
     {
@@ -26,15 +39,22 @@ public class AddProductViewModel : ViewModel
 
     public void AddProduct(object? unused)
     {
-        if (EnteredName.Length > 0 && EnteredPrice.Length > 0)
+        if (EnteredName?.Length > 0 && EnteredPrice?.Length > 0)
         {
-            Product newProduct = new()
+            if (float.TryParse(EnteredPrice, NumberStyles.Float, null, out float price))
             {
-                Name = EnteredName,
-                Price = float.Parse(EnteredPrice)
-            };
-            _productRepository.Create(newProduct);
-            AddProductEvent?.Invoke(this, EventArgs.Empty);
+                Product newProduct = new()
+                {
+                    Name = EnteredName,
+                    Price = price
+                };
+                _productRepository.Create(newProduct);
+                AddProductEvent?.Invoke(this, EventArgs.Empty);
+                MessageBox.Show("Created", "Success", MessageBoxButton.OK);
+            }
+        } else
+        {
+            MessageBox.Show("Invalid data", "Error", MessageBoxButton.OK);
         }
     }
 }

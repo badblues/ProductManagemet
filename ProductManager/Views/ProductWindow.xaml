@@ -37,7 +37,10 @@
                 <DataTemplate>
                     <DockPanel>
                         <Label Content="{Binding UpProduct.Name}" />
-                        <Label Content="{Binding Count}" />
+                        <Label Content="{Binding Count, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button
+                            Content="Edit count"
+                            Command=""/>
                     </DockPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

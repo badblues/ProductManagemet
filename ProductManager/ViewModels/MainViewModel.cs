@@ -1,4 +1,6 @@
-﻿using System.Security.Policy;
+﻿using System.IO;
+using System.Security.Policy;
+using System.Windows;
 using System.Windows.Input;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -16,7 +18,6 @@ public class MainViewModel : ViewModel
     public ICommand OpenAddProductWindowCommand {  get; set; }
     public ICommand SelectProductCommand { get; init; }
     public ICommand RemoveLinkCommand { get; init; }
-    public ICommand EditCountCommand { get; init; }
     public ICommand ExportToExcelCommand { get; init; }
 
     public IEnumerable<Product> Products
@@ -39,24 +40,21 @@ public class MainViewModel : ViewModel
         }
     }
 
-    public string EnteredCount { get; set; } = "";
-
     private readonly IProductRepository _productRepository;
     private readonly ILinkRepository _linkRepository;
     private readonly IViewModelFactory _productVMFactory;
     private readonly AddProductViewModel _addProductViewModel;
-    private readonly AddProductWindow _addProductWindow;
     private readonly ExcelService _excelService;
 
     private IEnumerable<Product> _products;
     private IEnumerable<Link> _links;
+
 
     public MainViewModel(
         ILinkRepository linkRepository,
         IProductRepository productRepository,
         IViewModelFactory productVMFactory,
         AddProductViewModel addProductViewModel,
-        AddProductWindow addProductWindow,
         ExcelService excelService)
     {
         _productRepository = productRepository;
@@ -67,7 +65,6 @@ public class MainViewModel : ViewModel
         {
             LoadProducts();
         };
-        _addProductWindow = addProductWindow;
         _excelService = excelService;
 
         LoadProducts();
@@ -110,15 +107,22 @@ public class MainViewModel : ViewModel
 
     public void OpenAddProductWindow(object? unused)
     {
-        _addProductWindow.Show();
+        AddProductWindow addProductWindow = new AddProductWindow(_addProductViewModel);
+        addProductWindow.Show();
     }
 
     public void ExportToExcel(object? parameter)
     {
         if (parameter is string filePath)
         {
-            XLWorkbook workbook = _excelService.ExportProducts(Products);
-            workbook.SaveAs(filePath);
+            try
+            {
+                XLWorkbook workbook = _excelService.ExportProducts(Products);
+                workbook.SaveAs(filePath);
+            } catch (IOException)
+            {
+                MessageBox.Show("Error during file saving", "Error", MessageBoxButton.OK);
+            }
         }
     }
 

@@ -26,7 +26,6 @@ public partial class App : Application
             {
                 services.AddSingleton<MainWindow>();
                 services.AddSingleton<MainViewModel>();
-                services.AddSingleton<AddProductWindow>();
                 services.AddSingleton<AddProductViewModel>();
                 services.AddTransient<IViewModelFactory, ViewModelFactory>();
                 services.AddDbContext<ApplicationContext>(options =>
