@@ -13,6 +13,9 @@
     <Compile Update="Views\EditCountWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\InputDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ProductWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -22,6 +25,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\EditCountWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\InputDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">

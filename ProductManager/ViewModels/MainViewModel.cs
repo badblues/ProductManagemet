@@ -113,12 +113,12 @@ public class MainViewModel : ViewModel
 
     public void ExportToExcel(object? parameter)
     {
-        if (parameter is string filePath)
+        if (parameter is ProductExportArgs args)
         {
             try
             {
-                XLWorkbook workbook = _excelService.ExportProducts(Products);
-                workbook.SaveAs(filePath);
+                XLWorkbook workbook = _excelService.ExportProducts(Products, args.MaxLevel);
+                workbook.SaveAs(args.FileName);
             } catch (IOException)
             {
                 MessageBox.Show("Error during file saving", "Error", MessageBoxButton.OK);

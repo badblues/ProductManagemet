@@ -6,7 +6,7 @@ namespace ProductManager.Services;
 
 public class ExcelService
 {
-    public XLWorkbook ExportProducts(IEnumerable<Product> products)
+    public XLWorkbook ExportProducts(IEnumerable<Product> products, int maxLevel)
     {
         XLWorkbook workbook = new XLWorkbook();
         IXLWorksheet worksheet = workbook.Worksheets.Add("Products");
@@ -30,7 +30,7 @@ public class ExcelService
                 row += 1;
                 foreach (Link subProduct in product.ProductsBelow)
                 {
-                    row = WriteProduct(worksheet, subProduct, row, 2);
+                    row = WriteProduct(worksheet, subProduct, row, 2, maxLevel);
                     totalCost += GetCost(subProduct);
                     totalCount += GetTotalCount(subProduct) + subProduct.Count * 1;
                 }
@@ -47,8 +47,11 @@ public class ExcelService
         return workbook;
     }
 
-    private int WriteProduct(IXLWorksheet worksheet, Link link, int row, int level)
+    private int WriteProduct(IXLWorksheet worksheet, Link link, int row, int level, int maxLevel)
     {
+        if (level > maxLevel)
+            return row;
+
         worksheet.Cell(row, 1).Value = link.Product.Name;
         worksheet.Cell(row, 2).Value = level;
         worksheet.Cell(row, 3).Value = link.Count;
@@ -59,7 +62,7 @@ public class ExcelService
         row += 1;
         foreach (Link subProduct in link.Product.ProductsBelow)
         {
-            row = WriteProduct(worksheet, subProduct, row, level + 1);
+            row = WriteProduct(worksheet, subProduct, row, level + 1, maxLevel);
         }
 
         return row;
