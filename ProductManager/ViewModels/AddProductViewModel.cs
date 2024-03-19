@@ -53,7 +53,7 @@ public class AddProductViewModel : ViewModel
             }
         } else
         {
-            MessageBox.Show("Invalid data", "Error", MessageBoxButton.OK);
+            MessageBox.Show("Invalid data", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

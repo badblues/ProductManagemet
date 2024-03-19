@@ -159,7 +159,7 @@ public class ProductViewModel : ViewModel
         }
         else
         {
-            MessageBox.Show("Nothing to update", "Error", MessageBoxButton.OK);
+            MessageBox.Show("Nothing to update", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -173,7 +173,7 @@ public class ProductViewModel : ViewModel
     public void AddUpProduct(object? unused)
     {
         if (SelectedUpProduct == null)
-            MessageBox.Show("Select UpProduct", "Error", MessageBoxButton.OK);
+            MessageBox.Show("Select UpProduct", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         if (EnteredCount?.Length > 0 && int.TryParse(EnteredCount, NumberStyles.Integer, null, out int count))
         { 
             Link link = new Link
@@ -187,7 +187,7 @@ public class ProductViewModel : ViewModel
             MessageBox.Show("UpProduct added", "Success", MessageBoxButton.OK);
         } else
         {
-            MessageBox.Show("Enter count", "Error", MessageBoxButton.OK);
+            MessageBox.Show("Enter count", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

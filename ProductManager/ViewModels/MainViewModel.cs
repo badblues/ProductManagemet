@@ -119,7 +119,7 @@ public class MainViewModel : ViewModel
                 workbook.SaveAs(args.FileName);
             } catch (IOException)
             {
-                MessageBox.Show("Error during file saving", "Error", MessageBoxButton.OK);
+                MessageBox.Show("Error during file saving", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
