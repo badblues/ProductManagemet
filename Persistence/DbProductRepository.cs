@@ -28,7 +28,7 @@ public class DbProductRepository : IProductRepository
 
     public IEnumerable<Product> GetAll()
     {
-        List<Product> products = _context.Products.Include(p => p.ProductsBelow).ToList();
+        List<Product> products = _context.Products.ToList();
         return products;
     }
 

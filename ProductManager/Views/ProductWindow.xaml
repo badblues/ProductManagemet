@@ -37,10 +37,11 @@
                 <DataTemplate>
                     <DockPanel>
                         <Label Content="{Binding UpProduct.Name}" />
-                        <Label Content="{Binding Count, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label Content="{Binding Count}" />
                         <Button
                             Content="Edit count"
-                            Command=""/>
+                            Command="{Binding DataContext.SelectLinkCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                            CommandParameter="{Binding}"/>
                     </DockPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

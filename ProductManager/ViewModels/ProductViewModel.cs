@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Domain.Models;
 using Persistence;
 using ProductManager.Core;
+using ProductManager.Views;
 
 namespace ProductManager.ViewModels;
 
@@ -17,6 +18,7 @@ public class ProductViewModel : ViewModel
     public ICommand EditCommand { get; set; }
     public ICommand AddUpProductCommand { get; set; }
     public ICommand EditCountCommand { get; set; }
+    public ICommand SelectLinkCommand { get; set; }
 
     public Product CurrentProduct
     {
@@ -63,6 +65,16 @@ public class ProductViewModel : ViewModel
         }
     }
 
+    public Link SelectedLink
+    {
+        get => _selectedLink;
+        set
+        {
+            _selectedLink = value;
+            OnPropertyChanged(nameof(SelectedLink));
+        }
+    }
+
     public string EnteredCount
     {
         get => _enteredCount;
@@ -94,6 +106,7 @@ public class ProductViewModel : ViewModel
     private readonly ILinkRepository _linkRepository;
 
     private Product _selectedUpProduct;
+    private Link _selectedLink;
 
     private string _enteredName;
     private string _enteredPrice;
@@ -118,6 +131,7 @@ public class ProductViewModel : ViewModel
         EditCommand = new RelayCommand(EditProduct, o => true);
         AddUpProductCommand = new RelayCommand(AddUpProduct, o => true);
         EditCountCommand = new RelayCommand(EditLink, o => true);
+        SelectLinkCommand = new RelayCommand(SelectLink, o => true);
     }
 
     public void EditProduct(object? parameter)
@@ -177,8 +191,30 @@ public class ProductViewModel : ViewModel
         }
     }
 
+    public void SelectLink(object? parameter)
+    {
+        if (parameter is Link link)
+        {
+            SelectedLink = link;
+            EditCountText = link.Count.ToString();
+            EditCountWindow editCountWindow = new EditCountWindow(this);
+            editCountWindow.Show();
+        }
+    }
+
     public void EditLink(object? unused)
     {
+        if (int.TryParse(EditCountText, NumberStyles.Integer, null, out int count) && SelectedLink.Count != count)
+        {
+            SelectedLink.Count = count;
+            _linkRepository.Update(SelectedLink);
+
+            //TODO: fix roundabout way of updating UI
+            Product tmp = CurrentProduct;
+            CurrentProduct = null;
+            CurrentProduct = tmp;
+            EditProductEvent?.Invoke(this, EventArgs.Empty);
+        }
     }
 
 }
