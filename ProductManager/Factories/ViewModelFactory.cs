@@ -1,5 +1,5 @@
 ﻿using Domain.Models;
-using Persistence;
+using Persistence.Repositories.Interfaces;
 using ProductManager.ViewModels;
 
 namespace ProductManager.Factories;

@@ -1,11 +1,9 @@
 ﻿using System.IO;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Input;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Domain.Models;
-using Persistence;
+using Persistence.Repositories.Interfaces;
 using ProductManager.Core;
 using ProductManager.Factories;
 using ProductManager.Services;

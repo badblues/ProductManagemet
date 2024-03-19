@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
+using Persistence.Repositories;
+using Persistence.Repositories.Interfaces;
 using ProductManager.Factories;
 using ProductManager.Services;
 using ProductManager.ViewModels;

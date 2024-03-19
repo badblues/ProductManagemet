@@ -1,9 +1,8 @@
-﻿
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using Domain.Models;
-using Persistence;
+using Persistence.Repositories.Interfaces;
 using ProductManager.Core;
 
 namespace ProductManager.ViewModels;

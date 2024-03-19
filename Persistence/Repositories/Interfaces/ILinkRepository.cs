@@ -1,6 +1,6 @@
 ﻿using Domain.Models;
 
-namespace Persistence;
+namespace Persistence.Repositories.Interfaces;
 
 public interface ILinkRepository
 {

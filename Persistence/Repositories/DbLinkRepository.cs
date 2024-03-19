@@ -1,7 +1,8 @@
 ﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Repositories.Interfaces;
 
-namespace Persistence;
+namespace Persistence.Repositories;
 
 public class DbLinkRepository : ILinkRepository
 {
