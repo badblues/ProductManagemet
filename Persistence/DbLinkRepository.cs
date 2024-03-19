@@ -7,14 +7,22 @@ public class DbLinkRepository : ILinkRepository
 {
 
     private ApplicationContext _context;
+    private IProductRepository _productRepository;
 
-    public DbLinkRepository(ApplicationContext context)
+    public DbLinkRepository(
+        ApplicationContext context,
+        IProductRepository productRepository)
     {
         _context = context;
+        _productRepository = productRepository;
     }
 
     public void Create(Link link)
     {
+        Product? product = _productRepository.Get(link.ProductId);
+        Product? upProduct = _productRepository.Get(link.UpProductId);
+        if (FindCycle(product, upProduct))
+            throw new ArgumentException("Products cannot form cycles");
         _context.Links.Add(link);
         _context.SaveChanges();
     }
@@ -55,5 +63,17 @@ public class DbLinkRepository : ILinkRepository
             _context.Remove(link);
             _context.SaveChanges();
         }
+    }
+
+    private bool FindCycle(Product product, Product upProduct)
+    {
+        if (product == upProduct)
+            return true;
+        foreach (Link productBelow in product.ProductsBelow)
+        {
+            if (FindCycle(productBelow.Product, upProduct))
+                return true;
+        }
+        return false;
     }
 }
