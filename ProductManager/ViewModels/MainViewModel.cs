@@ -28,16 +28,6 @@ public class MainViewModel : ViewModel
         }
     }
 
-    public IEnumerable<Link> Links
-    {
-        get => _links;
-        set
-        {
-            _links = value;
-            OnPropertyChanged(nameof(Links));
-        }
-    }
-
     private readonly IProductRepository _productRepository;
     private readonly ILinkRepository _linkRepository;
     private readonly IViewModelFactory _productVMFactory;
@@ -45,8 +35,6 @@ public class MainViewModel : ViewModel
     private readonly ExcelService _excelService;
 
     private IEnumerable<Product> _products;
-    private IEnumerable<Link> _links;
-
 
     public MainViewModel(
         ILinkRepository linkRepository,
@@ -59,14 +47,10 @@ public class MainViewModel : ViewModel
         _linkRepository = linkRepository;
         _productVMFactory = productVMFactory;
         _addProductViewModel = addProductViewModel;
-        _addProductViewModel.AddProductEvent += (sender, args) =>
-        {
-            LoadProducts();
-        };
         _excelService = excelService;
 
+        _addProductViewModel.AddProductEvent += (sender, args) => LoadProducts();
         LoadProducts();
-        Links = _linkRepository.GetAll();
 
         SelectProductCommand = new RelayCommand(SelectProduct, o => true);
         RemoveLinkCommand = new RelayCommand(RemoveLink, o => true);
@@ -81,14 +65,8 @@ public class MainViewModel : ViewModel
         if (parameter is Product product)
         {
             ProductViewModel productViewModel = _productVMFactory.CreateProductViewModel(product);
-            productViewModel.DeleteProductEvent += (sender, args) =>
-            {
-                LoadProducts();
-            };
-            productViewModel.EditProductEvent += (sender, args) =>
-            {
-                LoadProducts();
-            };
+            productViewModel.DeleteProductEvent += (sender, args) => LoadProducts();
+            productViewModel.EditProductEvent += (sender, args) => LoadProducts();
             ProductWindow productWindow = new ProductWindow(productViewModel);
             productWindow.Show();
         }
@@ -98,8 +76,14 @@ public class MainViewModel : ViewModel
     {
         if (parameter is Link link)
         {
-            _linkRepository.Delete(link.UpProductId, link.ProductId);
-            LoadProducts();
+            try
+            {
+                _linkRepository.Delete(link.UpProductId, link.ProductId);
+                LoadProducts();
+            } catch (Exception)
+            {
+                MessageBox.Show($"Error during removing link", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 
@@ -117,9 +101,9 @@ public class MainViewModel : ViewModel
             {
                 XLWorkbook workbook = _excelService.ExportProducts(Products, args.MaxLevel);
                 workbook.SaveAs(args.FileName);
-            } catch (IOException)
+            } catch (IOException ex)
             {
-                MessageBox.Show("Error during file saving", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error during file saving: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

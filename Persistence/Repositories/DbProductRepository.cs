@@ -12,7 +12,7 @@ public class DbProductRepository : IProductRepository
 
     public DbProductRepository(ApplicationContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     public void Create(Product product)
@@ -29,7 +29,9 @@ public class DbProductRepository : IProductRepository
 
     public IEnumerable<Product> GetAll()
     {
-        List<Product> products = _context.Products.ToList();
+        List<Product> products = _context.Products
+            .Include(p => p.ProductsBelow)
+            .Include(p => p.UpProducts).ToList();
         return products;
     }
 

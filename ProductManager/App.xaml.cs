@@ -30,7 +30,7 @@ public partial class App : Application
 
         string? connectionString = configuration.GetConnectionString("SQLiteDatabase");
 
-        if (connectionString == null)
+        if (string.IsNullOrEmpty(connectionString))
             throw new ConfigurationErrorsException("Couldn't find DB configuration");
 
         AppHost = Host.CreateDefaultBuilder()

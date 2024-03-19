@@ -9,7 +9,7 @@ namespace ProductManager.ViewModels;
 
 public class AddProductViewModel : ViewModel
 {
-    public event EventHandler AddProductEvent;
+    public event EventHandler? AddProductEvent;
 
     public string EnteredName { get; set; } = "";
 
@@ -32,15 +32,15 @@ public class AddProductViewModel : ViewModel
     public AddProductViewModel(IProductRepository productRepository)
     {
         _productRepository = productRepository;
-
         AddProductCommand = new RelayCommand(AddProduct, o => true);
     }
 
     public void AddProduct(object? unused)
     {
-        if (EnteredName?.Length > 0 && EnteredPrice?.Length > 0)
+        if (EnteredName?.Length > 0
+            && float.TryParse(EnteredPrice, NumberStyles.Float, null, out float price))
         {
-            if (float.TryParse(EnteredPrice, NumberStyles.Float, null, out float price))
+            try
             {
                 Product newProduct = new()
                 {
@@ -50,6 +50,9 @@ public class AddProductViewModel : ViewModel
                 _productRepository.Create(newProduct);
                 AddProductEvent?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show("Created", "Success", MessageBoxButton.OK);
+            } catch(Exception)
+            {
+                MessageBox.Show("Error creating product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         } else
         {
