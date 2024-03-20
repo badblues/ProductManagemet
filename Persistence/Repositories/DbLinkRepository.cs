@@ -21,6 +21,10 @@ public class DbLinkRepository : ILinkRepository
 
     public void Create(Link link)
     {
+        Link? oldLink = _context.Links.Find(link.UpProductId, link.ProductId);
+        if (oldLink != null)
+            throw new EntityAlreadyExists("Link with this products already exists");
+
         Product? product = _productRepository.Get(link.ProductId);
         if (product == null)
             throw new EntityNotFoundException("Product not found");
