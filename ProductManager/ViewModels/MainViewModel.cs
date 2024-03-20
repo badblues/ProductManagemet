@@ -95,7 +95,7 @@ public class MainViewModel : ViewModel
 
     public void ExportToExcel(object? parameter)
     {
-        if (parameter is ProductExportArgs args)
+        if (parameter is ProductsExportArgs args)
         {
             try
             {

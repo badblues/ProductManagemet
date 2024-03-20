@@ -33,7 +33,7 @@ public partial class MainWindow : Window
                 ICommand exportCommand = viewModel.ExportToExcelCommand;
                 if (exportCommand.CanExecute(null))
                 {
-                    exportCommand.Execute(new ProductExportArgs { FileName = dialog.FileName, MaxLevel = numberDialog.EnteredNumber });
+                    exportCommand.Execute(new ProductsExportArgs { FileName = dialog.FileName, MaxLevel = numberDialog.EnteredNumber });
                 }
             }
         }
