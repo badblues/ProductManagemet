@@ -38,19 +38,17 @@ public partial class App : Application
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddSingleton<MainWindow>();
-                services.AddSingleton<MainViewModel>();
-                services.AddSingleton<AddProductViewModel>();
-                services.AddTransient<IViewModelFactory, ViewModelFactory>();
                 services.AddDbContext<ApplicationContext>(options =>
                 {
                     options.UseSqlite(connectionString);
                 });
-
                 services.AddTransient<IProductRepository, DbProductRepository>();
                 services.AddTransient<ILinkRepository, DbLinkRepository>();
                 services.AddTransient<ExcelService>();
-
+                services.AddTransient<IViewModelFactory, ViewModelFactory>();
+                services.AddSingleton<AddProductViewModel>();
+                services.AddSingleton<MainViewModel>();
+                services.AddSingleton<MainWindow>();
             }).Build();
     }
 

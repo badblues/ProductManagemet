@@ -11,6 +11,8 @@ public class AddProductViewModel : ViewModel
 {
     public event EventHandler? AddProductEvent;
 
+    public ICommand AddProductCommand { get; init; }
+
     public string EnteredName { get; set; } = "";
 
     public string EnteredPrice
@@ -23,8 +25,6 @@ public class AddProductViewModel : ViewModel
         }
     }
 
-    public ICommand AddProductCommand { get; init; }
-
     private readonly IProductRepository _productRepository;
 
     private string _enteredPrice = "";
@@ -32,6 +32,7 @@ public class AddProductViewModel : ViewModel
     public AddProductViewModel(IProductRepository productRepository)
     {
         _productRepository = productRepository;
+
         AddProductCommand = new RelayCommand(AddProduct, o => true);
     }
 

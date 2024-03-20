@@ -14,10 +14,10 @@
         <DockPanel>
             <Button
                 Content="Save"
-                Command="{Binding EditCommand}"/>
+                Command="{Binding EditProductCommand}"/>
             <Button
                 Content="Delete"
-                Command="{Binding DeleteCommand}"/>
+                Command="{Binding DeleteProductCommand}"/>
         </DockPanel>
         <DockPanel>
             <Label Content="New UpProduct:"/>

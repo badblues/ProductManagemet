@@ -13,8 +13,8 @@ public class ProductViewModel : ViewModel
     public event EventHandler? DeleteProductEvent;
     public event EventHandler? EditProductEvent;
 
-    public ICommand DeleteCommand { get; set; }
-    public ICommand EditCommand { get; set; }
+    public ICommand DeleteProductCommand { get; set; }
+    public ICommand EditProductCommand { get; set; }
     public ICommand AddUpProductCommand { get; set; }
     public ICommand EditCountCommand { get; set; }
     public ICommand SelectLinkCommand { get; set; }
@@ -26,6 +26,26 @@ public class ProductViewModel : ViewModel
         {
             _currentProduct = value;
             OnPropertyChanged(nameof(CurrentProduct));
+        }
+    }
+
+    public Product? SelectedUpProduct
+    {
+        get => _selectedUpProduct;
+        set
+        {
+            _selectedUpProduct = value;
+            OnPropertyChanged(nameof(SelectedUpProduct));
+        }
+    }
+
+    public Link? SelectedLink
+    {
+        get => _selectedLink;
+        set
+        {
+            _selectedLink = value;
+            OnPropertyChanged(nameof(SelectedLink));
         }
     }
 
@@ -51,26 +71,6 @@ public class ProductViewModel : ViewModel
                 _enteredPrice = value;
                 OnPropertyChanged(nameof(_enteredName));
             }
-        }
-    }
-
-    public Product? SelectedUpProduct
-    {
-        get => _selectedUpProduct;
-        set
-        {
-            _selectedUpProduct = value;
-            OnPropertyChanged(nameof(SelectedUpProduct));
-        }
-    }
-
-    public Link? SelectedLink
-    {
-        get => _selectedLink;
-        set
-        {
-            _selectedLink = value;
-            OnPropertyChanged(nameof(SelectedLink));
         }
     }
 
@@ -126,8 +126,8 @@ public class ProductViewModel : ViewModel
 
         Products = _productRepository.GetAll();
 
-        DeleteCommand = new RelayCommand(DeleteProduct, o => true);
-        EditCommand = new RelayCommand(EditProduct, o => true);
+        DeleteProductCommand = new RelayCommand(DeleteProduct, o => true);
+        EditProductCommand = new RelayCommand(EditProduct, o => true);
         AddUpProductCommand = new RelayCommand(AddUpProduct, o => true);
         EditCountCommand = new RelayCommand(EditCount, o => true);
         SelectLinkCommand = new RelayCommand(SelectLink, o => true);

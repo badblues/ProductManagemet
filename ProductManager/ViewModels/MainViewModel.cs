@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using ClosedXML.Excel;
 using Domain.Models;
@@ -66,6 +65,7 @@ public class MainViewModel : ViewModel
             ProductViewModel productViewModel = _productVMFactory.CreateProductViewModel(product);
             productViewModel.DeleteProductEvent += (sender, args) => LoadProducts();
             productViewModel.EditProductEvent += (sender, args) => LoadProducts();
+
             ProductWindow productWindow = new(productViewModel);
             productWindow.Show();
         }
@@ -113,6 +113,7 @@ public class MainViewModel : ViewModel
     private void LoadProducts()
     {
         Products = _productRepository.GetAll();
+        //Filter first-level products
         Products = Products.Where(product => product.UpProducts.Count == 0);
     }
 }
