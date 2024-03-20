@@ -13,7 +13,7 @@
     <Compile Update="Views\EditCountWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\InputDialog.xaml.cs">
+    <Compile Update="Views\ExportLevelDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ProductWindow.xaml.cs">
@@ -27,7 +27,7 @@
     <Page Update="Views\EditCountWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\InputDialog.xaml">
+    <Page Update="Views\ExportLevelDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">

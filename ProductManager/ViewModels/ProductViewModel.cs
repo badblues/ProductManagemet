@@ -203,6 +203,11 @@ public class ProductViewModel : ViewModel
                 };
                 _linkRepository.Create(link);
                 EditProductEvent?.Invoke(this, EventArgs.Empty);
+
+                //TODO: fix roundabout way of updating UI
+                Product tmp = CurrentProduct;
+                CurrentProduct = null;
+                CurrentProduct = tmp;
                 MessageBox.Show("UpProduct added", "Success", MessageBoxButton.OK);
             }
             catch (Exception ex)

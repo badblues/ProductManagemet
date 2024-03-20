@@ -5,46 +5,84 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProductManager.Views"
         mc:Ignorable="d"
-        Title="ProductWindow" Height="400" Width="600" ResizeMode="NoResize">
-    <StackPanel>
-        <Label Content="Name:"/>
-        <TextBox Text="{Binding EnteredName, Mode=TwoWay}" />
-        <Label Content="Price:"/>
-        <TextBox Text="{Binding EnteredPrice, Mode=TwoWay}" />
-        <DockPanel>
+        Title="{Binding CurrentProduct.Name}" Height="550" Width="500" ResizeMode="NoResize">
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Width="300">
+        <Label
+            Content="Name:"
+            HorizontalAlignment="Center"/>
+        <TextBox
+            Text="{Binding EnteredName, Mode=TwoWay}"
+            Width="150"/>
+        <Label
+            Content="Price:"
+            HorizontalAlignment="Center"/>
+        <TextBox
+            Text="{Binding EnteredPrice, Mode=TwoWay}"
+            Width="150"/>
+        <DockPanel
+            HorizontalAlignment="Center">
             <Button
                 Content="Save"
-                Command="{Binding EditProductCommand}"/>
+                Command="{Binding EditProductCommand}"
+                Width="60"
+                Margin="5"/>
             <Button
                 Content="Delete"
-                Command="{Binding DeleteProductCommand}"/>
+                Command="{Binding DeleteProductCommand}"
+                Width="60"
+                Margin="5"/>
         </DockPanel>
-        <DockPanel>
-            <Label Content="New UpProduct:"/>
+        <DockPanel
+            HorizontalAlignment="Center">
+            <Label
+                Content="New UpProduct:"/>
             <ComboBox
                 ItemsSource="{Binding Products}"
                 DisplayMemberPath="Name"
                 SelectedItem="{Binding SelectedUpProduct, Mode=TwoWay}"/>
         </DockPanel>
-        <Label Content="Count:"/>
-        <TextBox Text="{Binding EnteredCount}"/>
+        <Label
+            Content="Count:"
+            HorizontalAlignment="Center"/>
+        <TextBox
+            Text="{Binding EnteredCount}"
+            Width="150"/>
         <Button
             Content="Add UpProduct"
-            Command="{Binding AddUpProductCommand}"/>
-        <ItemsControl
-            ItemsSource="{Binding CurrentProduct.UpProducts}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel>
-                        <Label Content="{Binding UpProduct.Name}" />
-                        <Label Content="{Binding Count}" />
-                        <Button
-                            Content="Edit count"
-                            Command="{Binding DataContext.SelectLinkCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                            CommandParameter="{Binding}"/>
-                    </DockPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            Command="{Binding AddUpProductCommand}"
+            Width="100"
+            Margin="10"/>
+        <Label 
+            Content="UpProducts:"
+            HorizontalAlignment="Center"/>
+        <ScrollViewer
+            CanContentScroll="True"
+            VerticalScrollBarVisibility="Auto"
+            Height="200"
+            Margin="20">
+            <ItemsControl
+                ItemsSource="{Binding CurrentProduct.UpProducts}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel
+                            Margin="5">
+                            <Label
+                                Content="{Binding UpProduct.Name}" />
+                            <Label
+                                Content="{Binding Count}"
+                                ContentStringFormat="Count: {0}"/>
+                            <Button
+                                Content="Edit count"
+                                Command="{Binding DataContext.SelectLinkCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                CommandParameter="{Binding}"
+                                Width="80"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </StackPanel>
 </Window>

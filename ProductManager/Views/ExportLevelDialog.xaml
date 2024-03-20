@@ -1,31 +1,42 @@
-﻿<Window x:Class="ProductManager.Views.InputDialog"
+﻿<Window x:Class="ProductManager.Views.ExportLevelDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProductManager.Views"
         mc:Ignorable="d"
-        Title="InputDialog" Height="150" Width="400">
-    <StackPanel>
+        Title="Export level" Height="150" Width="300" ResizeMode="NoResize">
+    <StackPanel
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
         <Label
-            Content="Enter a number:"
+            Content="Enter max subproducts level:"
+            FontSize="18"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"/>
         <TextBox
             x:Name="NumberTextBox"
+            FontSize="18"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Width="100"/>
+            Width="150"/>
         <StackPanel
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Orientation="Horizontal">
+            Orientation="Horizontal"
+            Margin="10">
             <Button
                 Content="OK"
-                Click="OkButton_Click"/>
+                Click="OkButton_Click"
+                FontSize="18"
+                Width="60"
+                Margin="5"/>
             <Button
                 Content="Cancel"
-                Click="CancelButton_Click"/>
+                Click="CancelButton_Click"
+                FontSize="18"
+                Width="60"
+                Margin="5"/>
         </StackPanel>
     </StackPanel>
 </Window>

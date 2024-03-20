@@ -5,24 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProductManager.Views"
         mc:Ignorable="d"
-        Title="AddProductWindow" Height="200" Width="400">
+        Title="New product" Height="200" Width="300" ResizeMode="NoResize">
     <StackPanel
-        HorizontalAlignment="Center">
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
         <Label
-            HorizontalAlignment="Center"
-            Content="ADD PRODUCT"/>
-        <Label Content="Name:"/>
+            Content="Name:"
+            FontSize="18"/>
         <TextBox
             Text="{Binding EnteredName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            Width="200"
-            Background="DarkGray"/>
-        <Label Content="Price:"/>
+            FontSize="18"
+            Width="200"/>
+        <Label
+            Content="Price:"
+            FontSize="18"/>
         <TextBox
             Text="{Binding EnteredPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            Width="200"
-            Background="DarkGray"/> 
+            FontSize="18"
+            Width="200"/> 
         <Button
             Content="Add"
-            Command="{Binding AddProductCommand}"/>
+            Command="{Binding AddProductCommand}"
+            FontSize="18"
+            Width="60"
+            Margin="10"/>
     </StackPanel>
 </Window>

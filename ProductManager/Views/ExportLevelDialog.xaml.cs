@@ -2,11 +2,11 @@
 
 namespace ProductManager.Views;
 
-public partial class InputDialog : Window
+public partial class ExportLevelDialog : Window
 {
     public int EnteredNumber { get; private set; }
 
-    public InputDialog()
+    public ExportLevelDialog()
     {
         InitializeComponent();
     }

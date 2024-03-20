@@ -14,15 +14,15 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    private void ExportFile_Click(object sender, RoutedEventArgs e)
+    private void ExportProducts_Click(object sender, RoutedEventArgs e)
     {
-        InputDialog numberDialog = new();
+        ExportLevelDialog numberDialog = new();
 
         SaveFileDialog dialog = new()
         {
             Filter = "Excel Files (*.xlsx)|*xlsx",
             DefaultExt = ".xlsx",
-            Title = "Export file"
+            Title = "Export products"
         };
 
         if (numberDialog.ShowDialog() == true)
