@@ -15,7 +15,7 @@ public class DbLinkRepository : ILinkRepository
         ApplicationContext context,
         IProductRepository productRepository)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
         _productRepository = productRepository;
     }
 
