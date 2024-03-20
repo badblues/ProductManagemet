@@ -6,22 +6,22 @@ public class RelayCommand : ICommand
 {
     public event EventHandler? CanExecuteChanged;
 
-    private Action<object?> _execute { get; set; }
-    private Predicate<object?> _canExecute { get; set; }
+    private Action<object?> ExecuteMethod { get; set; }
+    private Predicate<object?> CanExecuteMethod { get; set; }
 
     public RelayCommand(Action<object?> executeMethod, Predicate<object?> canExecuteMethod)
     {
-        _execute = executeMethod;
-        _canExecute = canExecuteMethod;
+        ExecuteMethod = executeMethod;
+        CanExecuteMethod = canExecuteMethod;
     }
 
     public bool CanExecute(object? parameter)
     {
-        return _canExecute(parameter);
+        return CanExecuteMethod(parameter);
     }
 
     public void Execute(object? parameter)
     {
-        _execute(parameter);
+        ExecuteMethod(parameter);
     }
 }
