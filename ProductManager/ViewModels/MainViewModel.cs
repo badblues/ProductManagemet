@@ -102,10 +102,11 @@ public class MainViewModel : ViewModel
                 XLWorkbook workbook = _excelService.ExportProducts(Products, args.MaxLevel);
                 workbook.SaveAs(args.FileName);
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Error during file saving: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error during export: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
         }
     }
 

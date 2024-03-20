@@ -5,6 +5,7 @@ namespace ProductManager.Services;
 
 public class ExcelService
 {
+
     public XLWorkbook ExportProducts(IEnumerable<Product> products, int maxLevel)
     {
         XLWorkbook workbook = new();
@@ -17,10 +18,18 @@ public class ExcelService
         worksheet.Cell(1, 5).Value = "Price";
         worksheet.Cell(1, 6).Value = "Total count";
 
+        WriteProducts(worksheet, products, maxLevel);
+
+        return workbook;
+    }
+
+    private void WriteProducts(IXLWorksheet worksheet, IEnumerable<Product> products, int maxLevel)
+    {
         int row = 2;
 
         foreach (Product product in products)
         {
+            //Filter only first-level products
             if (product.UpProducts.Count == 0)
             {
                 float totalCost = product.Price;
@@ -29,38 +38,30 @@ public class ExcelService
                 row += 1;
                 foreach (Link subProduct in product.ProductsBelow)
                 {
-                    row = WriteProduct(worksheet, subProduct, row, 2, maxLevel);
+                    row = WriteProductHelper(worksheet, subProduct, row, 2, maxLevel);
                     totalCost += GetCost(subProduct);
                     totalCount += GetTotalCount(subProduct) + subProduct.Count;
                 }
 
-                worksheet.Cell(myrow, 1).Value = product.Name;
-                worksheet.Cell(myrow, 2).Value = 1;
-                worksheet.Cell(myrow, 3).Value = 1;
-                worksheet.Cell(myrow, 4).Value = totalCost;
-                worksheet.Cell(myrow, 5).Value = product.Price;
-                worksheet.Cell(myrow, 6).Value = totalCount;
+                WriteValues(worksheet, row, product.Name, 1, 1, totalCost, product.Price, totalCount);
             }
         }
-        return workbook;
     }
 
-    private int WriteProduct(IXLWorksheet worksheet, Link link, int row, int level, int maxLevel)
+    private int WriteProductHelper(IXLWorksheet worksheet, Link link, int row, int level, int maxLevel)
     {
         if (level > maxLevel)
             return row;
 
-        worksheet.Cell(row, 1).Value = link.Product.Name;
-        worksheet.Cell(row, 2).Value = level;
-        worksheet.Cell(row, 3).Value = link.Count;
-        worksheet.Cell(row, 4).Value = GetCost(link);
-        worksheet.Cell(row, 5).Value = link.Product.Price;
-        worksheet.Cell(row, 6).Value = GetTotalCount(link);
+        if (link.Product == null)
+            throw new NullReferenceException("One of the link has no Product");
+
+        WriteValues(worksheet, row, link.Product.Name, level, link.Count, GetCost(link), link.Product.Price, GetTotalCount(link)) ;
 
         row += 1;
         foreach (Link subProduct in link.Product.ProductsBelow)
         {
-            row = WriteProduct(worksheet, subProduct, row, level + 1, maxLevel);
+            row = WriteProductHelper(worksheet, subProduct, row, level + 1, maxLevel);
         }
 
         return row;
@@ -91,5 +92,23 @@ public class ExcelService
             }
         }
         return totalCount;
+    }
+
+    private void WriteValues(
+        IXLWorksheet worksheet,
+        int row,
+        string name,
+        int level,
+        int count,
+        float totalCost,
+        float price,
+        int totalCount)
+    {
+        worksheet.Cell(row, 1).Value = name;
+        worksheet.Cell(row, 2).Value = level;
+        worksheet.Cell(row, 3).Value = count;
+        worksheet.Cell(row, 4).Value = totalCost;
+        worksheet.Cell(row, 5).Value = price;
+        worksheet.Cell(row, 6).Value = totalCount;
     }
 }
