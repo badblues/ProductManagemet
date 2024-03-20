@@ -103,7 +103,7 @@ public class ExcelService
         float price,
         int totalCount)
     {
-        worksheet.Cell(row, 1).Value = name;
+        worksheet.Cell(row, 1).Value = name.PadLeft(name.Length + (level - 1) * 2);
         worksheet.Cell(row, 2).Value = level;
         worksheet.Cell(row, 3).Value = count;
         worksheet.Cell(row, 4).Value = totalCost;
