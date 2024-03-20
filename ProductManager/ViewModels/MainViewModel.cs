@@ -34,7 +34,7 @@ public class MainViewModel : ViewModel
     private readonly AddProductViewModel _addProductViewModel;
     private readonly ExcelService _excelService;
 
-    private IEnumerable<Product> _products;
+    private IEnumerable<Product> _products = new List<Product>();
 
     public MainViewModel(
         ILinkRepository linkRepository,

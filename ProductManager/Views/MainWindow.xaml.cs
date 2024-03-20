@@ -30,7 +30,7 @@ public partial class MainWindow : Window
             if (dialog.ShowDialog() == true)
             {
                 MainViewModel? viewModel = DataContext as MainViewModel;
-                ICommand exportCommand = viewModel.ExportToExcelCommand;
+                ICommand exportCommand = viewModel!.ExportToExcelCommand;
                 if (exportCommand.CanExecute(null))
                 {
                     exportCommand.Execute(new ProductsExportArgs { FileName = dialog.FileName, MaxLevel = numberDialog.EnteredNumber });

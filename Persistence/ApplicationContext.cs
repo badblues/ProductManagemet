@@ -12,13 +12,15 @@ public class ApplicationContext : DbContext
         : base(options)
     {
         Database.EnsureCreated();
+        Products = Set<Product>();
+        Links = Set<Link>();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         ConfigureRelationships(modelBuilder);
-        FillWithData(modelBuilder);
+        SeedData(modelBuilder);
     }
 
     private void ConfigureRelationships(ModelBuilder modelBuilder)
@@ -51,7 +53,7 @@ public class ApplicationContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
     }
 
-    private void FillWithData(ModelBuilder modelBuilder)
+    private void SeedData(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Product>().HasData(
             new Product { Id = 1, Name = "Product 1", Price = 800f },
