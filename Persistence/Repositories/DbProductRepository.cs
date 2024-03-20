@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Exceptions;
 using Persistence.Repositories.Interfaces;
 
 namespace Persistence.Repositories;
@@ -36,21 +37,19 @@ public class DbProductRepository : IProductRepository
 
     public void Update(Product product)
     {
-        Product? oldProduct = _context.Products.SingleOrDefault(p => p.Id == product.Id);
-        if (oldProduct != null)
-        {
-            _context.Entry(oldProduct).CurrentValues.SetValues(product);
-            _context.SaveChanges();
-        }
+        Product? oldProduct = _context.Products.Find(product.Id);
+        if (oldProduct == null)
+            throw new EntityNotFoundException("Product not found");
+        _context.Entry(oldProduct).CurrentValues.SetValues(product);
+        _context.SaveChanges();
     }
 
     public void Delete(long id)
     {
         Product? product = _context.Products.Find(id);
-        if (product != null)
-        {
-            _context.Remove(product);
-            _context.SaveChanges();
-        }
+        if (product == null)
+            throw new EntityNotFoundException("Product not found");
+        _context.Remove(product);
+        _context.SaveChanges();
     }
 }

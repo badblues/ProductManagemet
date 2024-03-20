@@ -51,9 +51,9 @@ public class AddProductViewModel : ViewModel
                 AddProductEvent?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show("Created", "Success", MessageBoxButton.OK);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Error creating product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         else

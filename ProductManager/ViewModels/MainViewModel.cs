@@ -80,9 +80,9 @@ public class MainViewModel : ViewModel
                 _linkRepository.Delete(link.UpProductId, link.ProductId);
                 LoadProducts();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Error during removing link", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

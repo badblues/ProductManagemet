@@ -159,9 +159,9 @@ public class ProductViewModel : ViewModel
                 EditProductEvent?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show("Saved", "Success", MessageBoxButton.OK);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Error updating product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         else
@@ -178,9 +178,9 @@ public class ProductViewModel : ViewModel
             DeleteProductEvent?.Invoke(this, EventArgs.Empty);
             MessageBox.Show("Deleted", "Success", MessageBoxButton.OK);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            MessageBox.Show("Error updating product", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -205,9 +205,9 @@ public class ProductViewModel : ViewModel
                 EditProductEvent?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show("UpProduct added", "Success", MessageBoxButton.OK);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Error creating link", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         else
@@ -248,9 +248,9 @@ public class ProductViewModel : ViewModel
                 CurrentProduct = tmp;
                 EditProductEvent?.Invoke(this, EventArgs.Empty);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Error updating count", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Exceptions;
 using Persistence.Repositories.Interfaces;
 
 namespace Persistence.Repositories;
@@ -21,7 +22,12 @@ public class DbLinkRepository : ILinkRepository
     public void Create(Link link)
     {
         Product? product = _productRepository.Get(link.ProductId);
+        if (product == null)
+            throw new EntityNotFoundException("Product not found");
+
         Product? upProduct = _productRepository.Get(link.UpProductId);
+        if (upProduct == null)
+            throw new EntityNotFoundException("UpProduct not found");
 
         if (FindCycle(product, upProduct))
             throw new ArgumentException("Products cannot form cycles");
@@ -32,8 +38,7 @@ public class DbLinkRepository : ILinkRepository
 
     public Link? Get(long upProductId, long productId)
     {
-        Link? link = _context.Links
-            .SingleOrDefault(l => l.UpProductId == upProductId && l.ProductId == productId);
+        Link? link = _context.Links.Find(upProductId, productId);
         return link;
     }
 
@@ -48,24 +53,20 @@ public class DbLinkRepository : ILinkRepository
 
     public void Update(Link link)
     {
-        Link? oldLink = _context.Links
-            .SingleOrDefault(l => l.UpProductId == link.UpProductId && l.ProductId == link.ProductId);
-        if (oldLink != null)
-        {
-            _context.Entry(oldLink).CurrentValues.SetValues(link);
-            _context.SaveChanges();
-        }
+        Link? oldLink = _context.Links.Find(link.UpProductId, link.ProductId);
+        if (oldLink == null)
+            throw new EntityNotFoundException("Link not found");
+        _context.Entry(oldLink).CurrentValues.SetValues(link);
+        _context.SaveChanges();
     }
 
     public void Delete(long upProductId, long productId)
     {
-        Link? link = _context.Links
-            .SingleOrDefault(l => l.UpProductId == upProductId && l.ProductId == productId);
-        if (link != null)
-        {
-            _context.Remove(link);
-            _context.SaveChanges();
-        }
+        Link? link = _context.Links.Find(upProductId, productId);
+        if (link == null)
+            throw new EntityNotFoundException("UpProduct not found");
+        _context.Remove(link);
+        _context.SaveChanges();
     }
 
     private bool FindCycle(Product product, Product upProduct)
@@ -73,9 +74,13 @@ public class DbLinkRepository : ILinkRepository
         if (product == upProduct)
             return true;
 
-        foreach (Link productBelow in product.ProductsBelow)
+        foreach (Link productBelowLink in product.ProductsBelow)
         {
-            if (FindCycle(productBelow.Product, upProduct))
+            Product? nextProduct = productBelowLink.Product
+                ?? _productRepository.Get(productBelowLink.ProductId);
+            if (nextProduct == null)
+                throw new EntityNotFoundException("One of the products contains invalid link");
+            if (FindCycle(nextProduct, upProduct))
                 return true;
         }
         return false;
