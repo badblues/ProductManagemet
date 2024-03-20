@@ -43,7 +43,7 @@ public class ExcelService
                     totalCount += GetTotalCount(subProduct) + subProduct.Count;
                 }
 
-                WriteValues(worksheet, row, product.Name, 1, 1, totalCost, product.Price, totalCount);
+                WriteValues(worksheet, myrow, product.Name, 1, 1, totalCost, product.Price, totalCount);
             }
         }
     }
@@ -69,27 +69,26 @@ public class ExcelService
 
     private float GetCost(Link link)
     {
-        if (link.Product != null)
+        if (link.Product == null)
+            throw new NullReferenceException("One of the links has no Product");
+
+        float totalCost = link.Product.Price * link.Count;
+        foreach (Link subProduct in link.Product.ProductsBelow)
         {
-            float totalCost = link.Product.Price * link.Count;
-            foreach (Link subProduct in link.Product.ProductsBelow)
-            {
-                totalCost += GetCost(subProduct);
-            }
-            return totalCost;
+            totalCost += GetCost(subProduct);
         }
-        return 0;
+        return totalCost;
     }
 
     private int GetTotalCount(Link link)
     {
+        if (link.Product == null)
+            throw new NullReferenceException("One of the links has no Product");
+
         int totalCount = 0;
-        if (link.Product != null)
+        foreach (Link subProduct in link.Product.ProductsBelow)
         {
-            foreach (Link subProduct in link.Product.ProductsBelow)
-            {
-                totalCount += GetTotalCount(subProduct) + (subProduct.Count * link.Count);
-            }
+            totalCount += GetTotalCount(subProduct) + (subProduct.Count * link.Count);
         }
         return totalCount;
     }
