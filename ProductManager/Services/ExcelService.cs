@@ -23,7 +23,7 @@ public class ExcelService
         return workbook;
     }
 
-    private void WriteProducts(IXLWorksheet worksheet, IEnumerable<Product> products, int maxLevel)
+    private void WriteProducts(IXLWorksheet worksheet, IEnumerable<Product> products, int maxLevel = 5)
     {
         int row = 2;
 
@@ -38,7 +38,7 @@ public class ExcelService
                 row += 1;
                 foreach (Link subProduct in product.ProductsBelow)
                 {
-                    row = WriteProductHelper(worksheet, subProduct, row, 2, maxLevel);
+                    row = WriteProductWithSubproducts(worksheet, subProduct, row, 2, maxLevel);
                     totalCost += GetCost(subProduct);
                     totalCount += GetTotalCount(subProduct) + subProduct.Count;
                 }
@@ -48,20 +48,20 @@ public class ExcelService
         }
     }
 
-    private int WriteProductHelper(IXLWorksheet worksheet, Link link, int row, int level, int maxLevel)
+    private int WriteProductWithSubproducts(IXLWorksheet worksheet, Link link, int row, int level, int maxLevel)
     {
         if (level > maxLevel)
             return row;
 
         if (link.Product == null)
-            throw new NullReferenceException("One of the link has no Product");
+            throw new NullReferenceException("One of the links has no Product");
 
-        WriteValues(worksheet, row, link.Product.Name, level, link.Count, GetCost(link), link.Product.Price, GetTotalCount(link)) ;
+        WriteValues(worksheet, row, link.Product.Name, level, link.Count, GetCost(link), link.Product.Price, GetTotalCount(link));
 
         row += 1;
         foreach (Link subProduct in link.Product.ProductsBelow)
         {
-            row = WriteProductHelper(worksheet, subProduct, row, level + 1, maxLevel);
+            row = WriteProductWithSubproducts(worksheet, subProduct, row, level + 1, maxLevel);
         }
 
         return row;
